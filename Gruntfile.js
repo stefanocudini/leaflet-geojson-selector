@@ -7,7 +7,6 @@ grunt.loadNpmTasks('grunt-contrib-concat');
 grunt.loadNpmTasks('grunt-contrib-clean');
 grunt.loadNpmTasks('grunt-contrib-cssmin');
 grunt.loadNpmTasks('grunt-contrib-jshint');
-grunt.loadNpmTasks('grunt-contrib-watch');
 
 grunt.initConfig({
 	pkg: grunt.file.readJSON('package.json'),
@@ -64,14 +63,14 @@ grunt.initConfig({
 		},
 		dist: {
 			files: {
-				'dist/leaflet-list-geojson.min.js': ['dist/leaflet-list-geojson.src.js']
+				'dist/leaflet-geojson-list.min.js': ['dist/leaflet-geojson-list.src.js']
 			}
 		}
 	},
 	cssmin: {
 		combine: {
 			files: {
-				'dist/leaflet-list-geojson.min.css': ['src/leaflet-list-geojson.css']
+				'dist/leaflet-geojson-list.min.css': ['src/leaflet-geojson-list.css']
 			}
 		},
 		options: {
@@ -81,30 +80,18 @@ grunt.initConfig({
 			expand: true,
 			cwd: 'dist/',
 			files: {
-				'dist/leaflet-list-geojson.min.css': ['src/leaflet-list-geojson.css']
+				'dist/leaflet-geojson-list.min.css': ['src/leaflet-geojson-list.css']
 			}
 		}
-	},
-	watch: {
-		images: {
-			options: { livereload: true },
-			files: ['images/*.svg'],
-			tasks: ['svg2png']						
-		},
-		dist: {
-			options: { livereload: true },
-			files: ['src/*','examples/*.html'],
-			tasks: ['clean','concat','cssmin','jshint']
-		}		
 	}
 });
 
 grunt.registerTask('default', [
 	'clean',
-	'concat',	
-	'cssmin',
 	'jshint',
-	'uglify'
+	'concat',
+	'uglify',
+	'cssmin'
 ]);
 
 };

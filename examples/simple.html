@@ -37,28 +37,20 @@
 	var map = new L.Map('map', {
 			zoomControl: false,
 			layers: L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png')
-		}),
-		geoStyle = {
-			color:'#00f',
-			fillColor:'#0af',
-			weight: 1,
-			opacity: 1,
-			fillOpacity:0.4
-		},
-		geoStyleHover = {
-			color:'#00f',
-			fillColor:'#fa0',
-			weight: 1,
-			opacity: 1,
-			fillOpacity:0.6			
-		};
+		});
 
 	map.addControl(L.control.zoom({position:'topright'}));
 
 	$.getJSON('regions.json', function(json) {
 
 		var geoLayer = L.geoJson(json, {
-				style: geoStyle,
+				style: {
+					color:'#00f',
+					fillColor:'#08f',
+					weight: 1,
+					opacity: 1,
+					fillOpacity:0.4
+				},
 				onEachFeature: function(feature, layer) {
 					layer.bindPopup( L.Util.template(
 						"<b>{name}</b>"+
@@ -68,20 +60,13 @@
 				}
 			}).addTo(map);
 		
-		map.fitBounds( geoLayer.getBounds() );
-		map.setMaxBounds( geoLayer.getBounds().pad(0.5) );
+		map
+		.fitBounds( geoLayer.getBounds() )
+		.setMaxBounds( geoLayer.getBounds().pad(0.5) );
 
-		L.control.geoJsonList({
-			layer: geoLayer,
-			itemArrow: ''
-		})
-		.on('item-mouseover', function(e) {
-			e.layer.setStyle( geoStyleHover );
-		})
-		.on('item-mouseout', function(e) {
-			e.layer.setStyle( geoStyle );
-		})
-		.addTo(map);
+		var geoList = new L.Control.GeoJSONList( geoLayer );
+
+		map.addControl(geoList);
 		
 	});
 

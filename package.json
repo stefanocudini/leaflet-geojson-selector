@@ -1,6 +1,6 @@
 {
   "name": "leaflet-geojson-list",
-  "version": "0.0.3",
+  "version": "0.0.6",
   "description": "Leaflet Control for listing geojson properties in a interactive menu",
   "repository": {
     "type": "git",
@@ -30,7 +30,6 @@
     "grunt-contrib-cssmin": "~0.7.0",
     "grunt-contrib-jshint": "~0.7.2",
     "grunt-contrib-uglify": "~0.2.7",
-    "grunt-contrib-watch": "~0.5.3",
     "jquery": "~2.1.3"
   }
 }

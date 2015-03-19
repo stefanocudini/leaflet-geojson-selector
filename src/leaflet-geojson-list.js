@@ -2,31 +2,45 @@
 (function() {
 
 L.Control.GeoJSONList = L.Control.extend({
-
+	//
+	//	Name					Data passed			   Description
+	//
+	//Managed Events:
+	//	item-mouseover			{layer}                fired on mouse over the list item
+	//  item-mouseout			{layer}                fired on mouse out the list item
+	//
+	//Public methods:
+	//  TODO...
+	//
 	includes: L.Mixin.Events,
 
-	options: {		
-		layer: false,
-		collapsed: false,		
-		label: 'name',
+	options: {
+		collapsed: false,		//collapse panel list
+		label: 'name',			//GeoJSON property to generate items list
 		//TODO sortBy: 'name',
-		zoomOn: 'click',		//event on list item that trigger the fitBounds
-		itemArrow: '&#10148;',	//arrow icon
-		position: 'bottomleft'
+		zoomOn: 'click',		//event on item list that trigger the fitBounds
+		position: 'bottomleft',	//position of panel list
+		styleActive: {			//style for Active GeoJSON feature
+			color:'#00f',
+			fillColor:'#fa0',
+			weight: 1,
+			opacity: 1,
+			fillOpacity: 0.6
+		}
 	},
 
-	initialize: function(options) {
+	initialize: function(layer, options) {
 		L.Util.setOptions(this, options);
-		this._container = null;
-		this._list = null;
-		this._layer = this.options.layer;
+		this._layer = layer;
 	},
 
 	onAdd: function (map) {
 
 		this._map = map;
 	
-		var container = this._container = L.DomUtil.create('div', 'geojson-list');
+		var container = L.DomUtil.create('div', 'geojson-list');
+
+		this._container = container;
 
 		this._list = L.DomUtil.create('ul', 'geojson-list-ul', container);
 
@@ -50,9 +64,7 @@ L.Control.GeoJSONList = L.Control.extend({
 	},
 	
 	onRemove: function(map) {
-		map.off('moveend', this._updateList, this);
-		this._container = null;
-		this._list = null;		
+		map.off('moveend', this._updateList, this);	
 	},
 
 	_createItem: function(layer) {
@@ -66,17 +78,29 @@ L.Control.GeoJSONList = L.Control.extend({
 			.disableClickPropagation(a)
 			.on(a, this.options.zoomOn, L.DomEvent.stop, this)
 			.on(a, this.options.zoomOn, function(e) {
-				this._moveTo( layer );
+				
+				that._moveTo( layer );
+
+				that.fire('item-zoomon', {layer: layer });
+
 			}, this)
 			.on(a, 'mouseover', function(e) {
+
+				layer.setStyle( that.options.styleActive );
+
 				that.fire('item-mouseover', {layer: layer });
+
 			}, this)
 			.on(a, 'mouseout', function(e) {
+
+				that._layer.resetStyle(layer);
+
 				that.fire('item-mouseout', {layer: layer });
-			}, this);			
+
+			}, this);
 
 		if( layer.feature.properties.hasOwnProperty(this.options.label) )
-			a.innerHTML = '<span>'+layer.feature.properties[this.options.label]+'</span> <b>'+this.options.itemArrow+'</b>';
+			a.innerHTML = '<span>'+layer.feature.properties[this.options.label]+'</span>';
 		else
 			console.log("propertyName '"+this.options.label+"' not found in feature");
 
@@ -90,8 +114,8 @@ L.Control.GeoJSONList = L.Control.extend({
 
 		this._list.innerHTML = '';
 		this._layer.eachLayer(function(layer) {
-			if(layer.feature && layer.feature.type && layer.feature.type==='Feature')
-				that._list.appendChild( that._createItem(layer) );
+		//TODO SORTby		
+			that._list.appendChild( that._createItem(layer) );
 		});
 	},
 
