@@ -1,5 +1,5 @@
 /* 
- * Leaflet GeoJSON List v0.0.1 - 2015-03-19 
+ * Leaflet GeoJSON List v0.0.3 - 2015-03-19 
  * 
  * Copyright 2015 Stefano Cudini 
  * stefano.cudini@gmail.com 
@@ -26,6 +26,7 @@ L.Control.GeoJSONList = L.Control.extend({
 		collapsed: false,		
 		label: 'name',
 		//TODO sortBy: 'name',
+		zoomOn: 'click',
 		itemArrow: '&#10148;',	//visit: http://character-code.com/arrows-html-codes.php
 		position: 'bottomleft'
 	},
@@ -49,9 +50,13 @@ L.Control.GeoJSONList = L.Control.extend({
 	
 		this._updateList();
 
-		L.DomEvent.addListener(container, 'click', function (e) {
-			L.DomEvent.stopPropagation(e);
-		});
+		L.DomEvent
+			.on(container, 'mouseover', function (e) {
+				map.scrollWheelZoom.disable();
+			})
+			.on(container, 'mouseout', function (e) {
+				map.scrollWheelZoom.enable();
+			});			
 
 		map.whenReady(function(e) {
 			container.style.height = (e.getSize().y)+'px';

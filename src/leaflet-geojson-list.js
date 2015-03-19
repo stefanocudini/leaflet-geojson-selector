@@ -10,6 +10,7 @@ L.Control.GeoJSONList = L.Control.extend({
 		collapsed: false,		
 		label: 'name',
 		//TODO sortBy: 'name',
+		zoomOn: 'click',
 		itemArrow: '&#10148;',	//visit: http://character-code.com/arrows-html-codes.php
 		position: 'bottomleft'
 	},
@@ -33,9 +34,13 @@ L.Control.GeoJSONList = L.Control.extend({
 	
 		this._updateList();
 
-		L.DomEvent.addListener(container, 'click', function (e) {
-			L.DomEvent.stopPropagation(e);
-		});
+		L.DomEvent
+			.on(container, 'mouseover', function (e) {
+				map.scrollWheelZoom.disable();
+			})
+			.on(container, 'mouseout', function (e) {
+				map.scrollWheelZoom.enable();
+			});			
 
 		map.whenReady(function(e) {
 			container.style.height = (e.getSize().y)+'px';
