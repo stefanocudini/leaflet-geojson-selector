@@ -30,9 +30,20 @@
 			zoomControl: false,
 		}),
 		geoStyle = {
+			color:'#00f',
+			fillColor:'#00f',
 			weight: 1,
-			opacity: 1
+			opacity: 1,
+			fillOpacity:0.4
+		},
+		geoStyleHover = {
+			color:'#00f',
+			fillColor:'#e00',
+			weight: 1,
+			opacity: 1,
+			fillOpacity:0.6			
 		};
+
 	map.addControl(L.control.zoom({position:'topright'}));
 	map.addLayer(new L.TileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'));	//base layer
 
@@ -57,15 +68,11 @@
 
 		var list = new L.Control.GeoJSONList({layer: geoLayer});
 		
-/*		list.on('item-mouseover', function(e) {
-			e.layer.setIcon(L.icon({
-				iconUrl: '../images/select-marker.png'
-			}))
+		list.on('item-mouseover', function(e) {
+			e.layer.setStyle( geoStyleHover );
 		}).on('item-mouseout', function(e) {
-			e.layer.setIcon(L.icon({
-				iconUrl: L.Icon.Default.imagePath+'/marker-icon.png'
-			}))
-		});*/
+			e.layer.setStyle( geoStyle );
+		});
 
 		map.addControl( list );
 
