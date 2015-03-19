@@ -66,7 +66,7 @@
 		map.addLayer(geoLayer);
 		map.fitBounds( geoLayer.getBounds() );
 
-		var list = new L.Control.GeoJSONList({layer: geoLayer});
+		var list = new L.Control.GeoJSONList({layer: geoLayer,itemArrow:''});
 		
 		list.on('item-mouseover', function(e) {
 			e.layer.setStyle( geoStyleHover );
