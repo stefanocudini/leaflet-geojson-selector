@@ -3,7 +3,7 @@
 <head> 
 <title></title> 
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /> 
-<link rel="stylesheet" href="/maps/leaflet/dist/leaflet.css" />
+<link rel="stylesheet" href="../node_modules/leaflet/dist/leaflet.css" />
 <link rel="stylesheet" href="../src/leaflet-geojson-list.css" />
 <link rel="stylesheet" href="../style.css" />
 <style type="text/css">
@@ -12,6 +12,13 @@
 		font-size: 14px;
 		white-space: pre;
 	}
+
+	.geojson-list-li {
+		white-space: nowrap;
+		font-weight: bold;
+		text-transform: capitalize;
+	}
+
 </style>
 </head>
 
@@ -21,9 +28,9 @@
 <h4>Simple Example: <em>Italian regions</em></h4>
 <div id="map"></div>
 
-<script src="/maps/leaflet/dist/leaflet.js"></script>
-<script src="../src/leaflet-geojson-list.js"></script>
 <script src="../node_modules/jquery/dist/jquery.min.js"></script>
+<script src="../node_modules/leaflet/dist/leaflet.js"></script>
+<script src="../src/leaflet-geojson-list.js"></script>
 <script>
 
 	var map = new L.Map('map',{
@@ -65,6 +72,7 @@
 		
 		map.addLayer(geoLayer);
 		map.fitBounds( geoLayer.getBounds() );
+		map.setMaxBounds( geoLayer.getBounds().pad(0.5) );
 
 		var list = new L.Control.GeoJSONList({layer: geoLayer,itemArrow:''});
 		

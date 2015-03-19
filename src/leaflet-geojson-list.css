@@ -1,5 +1,5 @@
  
-.leaflet-container .list-markers {
+.leaflet-container .geojson-list {
 	position:relative;
 	float:left;
 	color:#1978cf;
@@ -17,65 +17,62 @@
 	overflow-y: scroll;
 }
 
-.leaflet-control.list-markers .list-markers-toggle {
+.leaflet-control.geojson-list .geojson-list-toggle {
 	display: none;
 }
-.leaflet-control.list-markers.list-markers-collapsed .list-markers-toggle {
+.leaflet-control.geojson-list.geojson-list-collapsed .geojson-list-toggle {
 	display: block;
 }
-.list-markers-ul {
+.geojson-list-ul {
 /*	border: 1px solid blue;*/
 	list-style: none;
 	padding: 0;
 	margin: 0;
 }
-.list-markers-li {
+.geojson-list-li {
 	padding: 0;
 	margin: 0;
-	clear: both;	
-	border-bottom: 1px solid #666;
+	clear: both;
 }
-.list-markers-li:first-child {
+.geojson-list-li:first-child {
 	border: none;
 }
-.list-markers-li img {
+.geojson-list-li img {
 	float: left;
 	width: 12px;
 	height: 20px;
 	margin-right: 4px;
 }
-.list-markers-li b {
+.geojson-list-li b {
 	float: right;
 }
-.list-markers-li span {
+.geojson-list-li span {
 	float: left;
 }
-.list-markers-li a {
+.geojson-list-li a {
+	border-bottom: 1px solid #666;		
 	display: block;
-	float: left;
-	line-height: 20px;
-	width: 120px;
 	overflow: hidden;
-	margin: 1px;
-	padding: 2px 4px;
-	border-radius: 4px;
-	font-size: 14px;
+	line-height: 20px;
+	min-width: 120px;
+	padding: 2px 8px;	
 	color: #666;	
 	text-decoration: none;
 }
-.list-markers-li a:hover {
-	color: #0078A8;
+.geojson-list-li a:hover {
+	display: block;
+	color: #666;
 	text-decoration: none;
 	background-color: rgba(255, 255, 255, 0.8);
 }
-.leaflet-control.list-markers .list-markers-ul {
+.leaflet-control.geojson-list .geojson-list-ul {
 	display: block;
 }
-.leaflet-control.list-markers.list-markers-collapsed .list-markers-ul {
+.leaflet-control.geojson-list.geojson-list-collapsed .geojson-list-ul {
 	display: none;
 }
 
-.list-markers .list-markers-toggle {
+.geojson-list .geojson-list-toggle {
 	display:block;
 	float:left;
 	width:26px;
@@ -83,11 +80,11 @@
 	background: url('../images/list-icon.png') no-repeat 2px 2px;
 	border-radius:4px;
 }
-.list-markers .list-markers-toggle:hover,
-.list-markers .list-markers-toggle.active:hover {
+.geojson-list .geojson-list-toggle:hover,
+.geojson-list .geojson-list-toggle.active:hover {
 	background: url('../images/list-icon.png') no-repeat 2px -24px #fff;
 }
-.list-markers .list-markers-toggle.active {
+.geojson-list .geojson-list-toggle.active {
 	background: url('../images/list-icon.png') no-repeat 2px -50px #fff;
 }
 

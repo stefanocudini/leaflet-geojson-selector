@@ -25,6 +25,7 @@ L.Control.GeoJSONList = L.Control.extend({
 		layer: false,
 		collapsed: false,		
 		label: 'name',
+		//TODO sortBy: 'name',
 		itemArrow: '&#10148;',	//visit: http://character-code.com/arrows-html-codes.php
 		position: 'bottomleft'
 	},
@@ -40,9 +41,9 @@ L.Control.GeoJSONList = L.Control.extend({
 
 		this._map = map;
 	
-		var container = this._container = L.DomUtil.create('div', 'list-markers');
+		var container = this._container = L.DomUtil.create('div', 'geojson-list');
 
-		this._list = L.DomUtil.create('ul', 'list-markers-ul', container);
+		this._list = L.DomUtil.create('ul', 'geojson-list-ul', container);
 
 		this._initToggle();
 	
@@ -67,7 +68,7 @@ L.Control.GeoJSONList = L.Control.extend({
 
 	_createItem: function(layer) {
 
-		var li = L.DomUtil.create('li', 'list-markers-li'),
+		var li = L.DomUtil.create('li', 'geojson-list-li'),
 			a = L.DomUtil.create('a', '', li),
 			that = this;
 
@@ -131,9 +132,9 @@ L.Control.GeoJSONList = L.Control.extend({
 					.on(container, 'mouseover', this._expand, this)
 					.on(container, 'mouseout', this._collapse, this);
 			}
-			var link = this._button = L.DomUtil.create('a', 'list-markers-toggle', container);
+			var link = this._button = L.DomUtil.create('a', 'geojson-list-toggle', container);
 			link.href = '#';
-			link.title = 'List Markers';
+			link.title = 'List GeoJSON';
 
 			if (L.Browser.touch) {
 				L.DomEvent
@@ -150,15 +151,15 @@ L.Control.GeoJSONList = L.Control.extend({
 	},
 
 	_expand: function () {
-		this._container.className = this._container.className.replace(' list-markers-collapsed', '');
+		this._container.className = this._container.className.replace(' geojson-list-collapsed', '');
 	},
 
 	_collapse: function () {
-		L.DomUtil.addClass(this._container, 'list-markers-collapsed');
+		L.DomUtil.addClass(this._container, 'geojson-list-collapsed');
 	},
 
     _moveTo: function(layer) {
-		this._map.fitBounds( layer.getBounds() );
+		this._map.fitBounds( layer.getBounds().pad(1) );
     }
 });
 
