@@ -34,29 +34,26 @@
 <script src="../src/leaflet-geojson-list.js"></script>
 <script>
 
-	var map = new L.Map('map',{
+	var map = new L.Map('map', {
 			zoomControl: false,
+			layers: L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png')
 		}),
 		geoStyle = {
 			color:'#00f',
-			fillColor:'#00f',
+			fillColor:'#0af',
 			weight: 1,
 			opacity: 1,
 			fillOpacity:0.4
 		},
 		geoStyleHover = {
 			color:'#00f',
-			fillColor:'#e00',
+			fillColor:'#fa0',
 			weight: 1,
 			opacity: 1,
 			fillOpacity:0.6			
 		};
 
 	map.addControl(L.control.zoom({position:'topright'}));
-	map.addLayer(new L.TileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'));	//base layer
-
-	var markersLayer = new L.LayerGroup();	//layer contain searched elements
-	map.addLayer(markersLayer);
 
 	$.getJSON('regions.json', function(json) {
 
@@ -69,22 +66,22 @@
 						"<br>Length: {length}"
 						,feature.properties) );
 				}
-			});
+			}).addTo(map);
 		
-		map.addLayer(geoLayer);
 		map.fitBounds( geoLayer.getBounds() );
 		map.setMaxBounds( geoLayer.getBounds().pad(0.5) );
 
-		var list = new L.Control.GeoJSONList({layer: geoLayer,itemArrow:''});
-		
-		list.on('item-mouseover', function(e) {
+		L.control.geoJsonList({
+			layer: geoLayer,
+			itemArrow: ''
+		})
+		.on('item-mouseover', function(e) {
 			e.layer.setStyle( geoStyleHover );
-		}).on('item-mouseout', function(e) {
+		})
+		.on('item-mouseout', function(e) {
 			e.layer.setStyle( geoStyle );
-		});
-
-		map.addControl( list );
-
+		})
+		.addTo(map);
 		
 	});
 

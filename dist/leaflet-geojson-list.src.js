@@ -26,8 +26,8 @@ L.Control.GeoJSONList = L.Control.extend({
 		collapsed: false,		
 		label: 'name',
 		//TODO sortBy: 'name',
-		zoomOn: 'click',
-		itemArrow: '&#10148;',	//visit: http://character-code.com/arrows-html-codes.php
+		zoomOn: 'click',		//event on list item that trigger the fitBounds
+		itemArrow: '&#10148;',	//arrow icon
 		position: 'bottomleft'
 	},
 
@@ -80,8 +80,8 @@ L.Control.GeoJSONList = L.Control.extend({
 		a.href = '#';
 		L.DomEvent
 			.disableClickPropagation(a)
-			.on(a, 'click', L.DomEvent.stop, this)
-			.on(a, 'click', function(e) {
+			.on(a, this.options.zoomOn, L.DomEvent.stop, this)
+			.on(a, this.options.zoomOn, function(e) {
 				this._moveTo( layer );
 			}, this)
 			.on(a, 'mouseover', function(e) {

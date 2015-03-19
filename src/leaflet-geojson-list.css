@@ -63,7 +63,7 @@
 	display: block;
 	color: #666;
 	text-decoration: none;
-	background-color: rgba(255, 255, 255, 0.8);
+	background-color: rgba(255,170,0, 0.6);
 }
 .leaflet-control.geojson-list .geojson-list-ul {
 	display: block;
