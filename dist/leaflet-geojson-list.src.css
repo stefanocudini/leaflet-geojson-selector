@@ -1,0 +1,111 @@
+/* 
+ * Leaflet GeoJSON List v0.0.1 - 2015-03-19 
+ * 
+ * Copyright 2015 Stefano Cudini 
+ * stefano.cudini@gmail.com 
+ * http://labs.easyblog.it/ 
+ * 
+ * Licensed under the MIT license. 
+ * 
+ * Demo: 
+ * http://labs.easyblog.it/maps/leaflet-geojson-list/ 
+ * 
+ * Source: 
+ * git@github.com:stefanocudini/leaflet-geojson-list.git 
+ * 
+ */
+ 
+.leaflet-container .list-markers {
+	position:relative;
+	float:left;
+	color:#1978cf;
+	-moz-border-radius: 4px;
+	-webkit-border-radius: 4px;
+	border-radius: 0;
+	/*background-color: rgba(0, 0, 0, 0.25);*/
+	background-color: rgba(255, 255, 255, 0.4);
+	z-index:1000;	
+	box-shadow: 0 1px 7px rgba(0,0,0,0.65);
+	margin: 0;
+
+	min-width:26px;
+	min-height:26px;
+	overflow-y: scroll;
+}
+
+.leaflet-control.list-markers .list-markers-toggle {
+	display: none;
+}
+.leaflet-control.list-markers.list-markers-collapsed .list-markers-toggle {
+	display: block;
+}
+.list-markers-ul {
+/*	border: 1px solid blue;*/
+	list-style: none;
+	padding: 0;
+	margin: 0;
+}
+.list-markers-li {
+	padding: 0;
+	margin: 0;
+	clear: both;	
+	border-bottom: 1px solid #666;
+}
+.list-markers-li:first-child {
+	border: none;
+}
+.list-markers-li img {
+	float: left;
+	width: 12px;
+	height: 20px;
+	margin-right: 4px;
+}
+.list-markers-li b {
+	float: right;
+}
+.list-markers-li span {
+	float: left;
+}
+.list-markers-li a {
+	display: block;
+	float: left;
+	line-height: 20px;
+	width: 120px;
+	overflow: hidden;
+	margin: 1px;
+	padding: 2px 4px;
+	border-radius: 4px;
+	font-size: 14px;
+	color: #666;	
+	text-decoration: none;
+}
+.list-markers-li a:hover {
+	color: #0078A8;
+	text-decoration: none;
+	background-color: rgba(255, 255, 255, 0.8);
+}
+.leaflet-control.list-markers .list-markers-ul {
+	display: block;
+}
+.leaflet-control.list-markers.list-markers-collapsed .list-markers-ul {
+	display: none;
+}
+
+.list-markers .list-markers-toggle {
+	display:block;
+	float:left;
+	width:26px;
+	height:26px;
+	background: url('../images/list-icon.png') no-repeat 2px 2px;
+	border-radius:4px;
+}
+.list-markers .list-markers-toggle:hover,
+.list-markers .list-markers-toggle.active:hover {
+	background: url('../images/list-icon.png') no-repeat 2px -24px #fff;
+}
+.list-markers .list-markers-toggle.active {
+	background: url('../images/list-icon.png') no-repeat 2px -50px #fff;
+}
+
+
+
