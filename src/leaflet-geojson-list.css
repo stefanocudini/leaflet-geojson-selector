@@ -59,6 +59,7 @@
 	color: #666;	
 	text-decoration: none;
 }
+.geojson-list-li a.active,
 .geojson-list-li a:hover {
 	display: block;
 	color: #666;

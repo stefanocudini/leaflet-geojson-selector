@@ -6,8 +6,7 @@ L.Control.GeoJSONList = L.Control.extend({
 	//	Name					Data passed			   Description
 	//
 	//Managed Events:
-	//	item-mouseover			{layer}                fired on mouse over the list item
-	//  item-mouseout			{layer}                fired on mouse out the list item
+	//	item-active				{layer}                fired on 'activeEventList'
 	//
 	//Public methods:
 	//  TODO...
@@ -15,17 +14,29 @@ L.Control.GeoJSONList = L.Control.extend({
 	includes: L.Mixin.Events,
 
 	options: {
-		collapsed: false,		//collapse panel list
-		label: 'name',			//GeoJSON property to generate items list
+		collapsed: false,			//collapse panel list
+		position: 'bottomleft',		//position of panel list
 		//TODO sortBy: 'name',
-		zoomOn: 'click',		//event on item list that trigger the fitBounds
-		position: 'bottomleft',	//position of panel list
-		styleActive: {			//style for Active GeoJSON feature
+
+		listLabel: 'name',			//GeoJSON property to generate items list
+		activeListFromLayer: true,	//enable activation of list item from layer
+
+		activeEventList: 'click',	//event on item list that trigger the fitBounds
+		activeEventLayer: 'mouseover',	//event on item list that trigger the fitBounds
+		activeClass: 'active',		//css class name for active list items
+		activeStyle: {				//style for Active GeoJSON feature
 			color:'#00f',
 			fillColor:'#fa0',
 			weight: 1,
 			opacity: 1,
 			fillOpacity: 0.6
+		},
+		style: {
+			color:'#00f',
+			fillColor:'#08f',
+			weight: 1,
+			opacity: 1,
+			fillOpacity:0.4
 		}
 	},
 
@@ -73,36 +84,38 @@ L.Control.GeoJSONList = L.Control.extend({
 			a = L.DomUtil.create('a', '', li),
 			that = this;
 
+		layer.itemList = a;
+
 		a.href = '#';
 		L.DomEvent
 			.disableClickPropagation(a)
-			.on(a, this.options.zoomOn, L.DomEvent.stop, this)
-			.on(a, this.options.zoomOn, function(e) {
+			.on(a, this.options.activeEventList, L.DomEvent.stop, this)
+			.on(a, this.options.activeEventList, function(e) {
 				
 				that._moveTo( layer );
 
-				that.fire('item-zoomon', {layer: layer });
+				that.fire('item-active', {layer: layer });
 
 			}, this)
 			.on(a, 'mouseover', function(e) {
+				
+				L.DomUtil.addClass(e.target, this.options.activeClass);
 
-				layer.setStyle( that.options.styleActive );
-
-				that.fire('item-mouseover', {layer: layer });
+				layer.setStyle( that.options.activeStyle );
 
 			}, this)
 			.on(a, 'mouseout', function(e) {
 
-				that._layer.resetStyle(layer);
+				L.DomUtil.removeClass(e.target, this.options.activeClass);
 
-				that.fire('item-mouseout', {layer: layer });
+				layer.setStyle( that.options.style );
 
 			}, this);
 
-		if( layer.feature.properties.hasOwnProperty(this.options.label) )
-			a.innerHTML = '<span>'+layer.feature.properties[this.options.label]+'</span>';
+		if( layer.feature.properties.hasOwnProperty(this.options.listLabel) )
+			a.innerHTML = '<span>'+layer.feature.properties[this.options.listLabel]+'</span>';
 		else
-			console.log("propertyName '"+this.options.label+"' not found in feature");
+			console.log("propertyName '"+this.options.listLabel+"' not found in GeoJSON");
 
 		return li;
 	},
@@ -112,10 +125,29 @@ L.Control.GeoJSONList = L.Control.extend({
 		var that = this,
 			n = 0;
 
+		//TODO SORTby
+
 		this._list.innerHTML = '';
 		this._layer.eachLayer(function(layer) {
-		//TODO SORTby		
+
 			that._list.appendChild( that._createItem(layer) );
+
+			layer.setStyle( that.options.style );
+
+			if(that.options.activeListFromLayer) {
+				layer
+				.on('mouseover', function(e) {
+					
+					layer.setStyle( that.options.activeStyle );
+					L.DomUtil.addClass(layer.itemList, that.options.activeClass);
+
+				})
+				.on('mouseout', function(e) {
+
+					layer.setStyle( that.options.style );
+					L.DomUtil.removeClass(layer.itemList, that.options.activeClass);
+				});
+			}
 		});
 	},
 

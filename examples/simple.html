@@ -41,24 +41,9 @@
 
 	map.addControl(L.control.zoom({position:'topright'}));
 
-	$.getJSON('regions.json', function(json) {
+	$.getJSON('italy-regions.json', function(json) {
 
-		var geoLayer = L.geoJson(json, {
-				style: {
-					color:'#00f',
-					fillColor:'#08f',
-					weight: 1,
-					opacity: 1,
-					fillOpacity:0.4
-				},
-				onEachFeature: function(feature, layer) {
-					layer.bindPopup( L.Util.template(
-						"<b>{name}</b>"+
-						"<br>Area: {area}"+
-						"<br>Length: {length}"
-						,feature.properties) );
-				}
-			}).addTo(map);
+		var geoLayer = L.geoJson(json).addTo(map);
 		
 		map
 		.fitBounds( geoLayer.getBounds() )
