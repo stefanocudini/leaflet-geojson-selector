@@ -1,6 +1,6 @@
 {
   "name": "leaflet-geojson-list",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Leaflet Control for listing geojson properties in a interactive menu",
   "repository": {
     "type": "git",

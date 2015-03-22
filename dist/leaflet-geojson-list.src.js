@@ -1,5 +1,5 @@
 /* 
- * Leaflet GeoJSON List v0.1.0 - 2015-03-22 
+ * Leaflet GeoJSON List v0.1.1 - 2015-03-22 
  * 
  * Copyright 2015 Stefano Cudini 
  * stefano.cudini@gmail.com 
@@ -32,9 +32,9 @@ L.Control.GeoJSONList = L.Control.extend({
 	options: {
 		collapsed: false,			//collapse panel list
 		position: 'bottomleft',		//position of panel list
-		//TODO sortBy: 'name',
-
 		listLabel: 'name',			//GeoJSON property to generate items list
+		listSortBy: null,			//GeoJSON property to sort items list, default listLabel
+
 		activeListFromLayer: true,	//enable activation of list item from layer
 
 		activeEventList: 'click',	//event on item list that trigger the fitBounds
@@ -58,6 +58,9 @@ L.Control.GeoJSONList = L.Control.extend({
 
 	initialize: function(layer, options) {
 		L.Util.setOptions(this, options);
+
+		this.options.listSortBy = this.options.listSortBy || this.options.listLabel;
+
 		this._layer = layer;
 	},
 
@@ -139,14 +142,15 @@ L.Control.GeoJSONList = L.Control.extend({
 	_updateList: function() {
 	
 		var that = this,
-			n = 0;
+			layers = [],
+			sortProp = this.options.listSortBy;
 
 		//TODO SORTby
 
 		this._list.innerHTML = '';
 		this._layer.eachLayer(function(layer) {
 
-			that._list.appendChild( that._createItem(layer) );
+			layers.push( layer );
 
 			layer.setStyle( that.options.style );
 
@@ -165,6 +169,22 @@ L.Control.GeoJSONList = L.Control.extend({
 				});
 			}
 		});
+
+		console.log(sortProp);
+
+		layers.sort(function(a, b) {
+			var ap = a.feature.properties[sortProp],
+				bp = b.feature.properties[sortProp];
+
+			if(ap < bp)
+				return -1;
+			if(ap > bp)
+				return 1;
+			return 0;
+		});
+
+		for (var i=0; i<layers.length; i++)
+			this._list.appendChild( this._createItem( layers[i] ) );
 	},
 
 	_initToggle: function () {
