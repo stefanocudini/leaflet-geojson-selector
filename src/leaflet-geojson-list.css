@@ -23,34 +23,17 @@
 .leaflet-control.geojson-list.geojson-list-collapsed .geojson-list-toggle {
 	display: block;
 }
-.geojson-list-ul {
+.geojson-list-group {
 /*	border: 1px solid blue;*/
 	list-style: none;
 	padding: 0;
 	margin: 0;
 }
-.geojson-list-li {
+.geojson-list-item {
 	padding: 0;
 	margin: 0;
 	clear: both;
-}
-.geojson-list-li:first-child {
-	border: none;
-}
-.geojson-list-li img {
-	float: left;
-	width: 12px;
-	height: 20px;
-	margin-right: 4px;
-}
-.geojson-list-li b {
-	float: right;
-}
-.geojson-list-li span {
-	float: left;
-}
-.geojson-list-li a {
-	border-bottom: 1px solid #666;		
+	cursor: pointer;
 	display: block;
 	overflow: hidden;
 	line-height: 20px;
@@ -58,15 +41,16 @@
 	padding: 2px 8px;	
 	color: #666;	
 	text-decoration: none;
+	border-bottom: 1px solid rgba(0,0,0, 0.5);
 }
-.geojson-list-li a.active,
-.geojson-list-li a:hover {
+.geojson-list-item:hover,
+.geojson-list-item.active {
 	display: block;
 	color: #666;
 	text-decoration: none;
 	background-color: rgba(255,170,0, 0.6);
 }
-.leaflet-control.geojson-list .geojson-list-ul {
+.leaflet-control.geojson-list .geojson-list-group {
 	display: block;
 }
 .leaflet-control.geojson-list.geojson-list-collapsed .geojson-list-ul {

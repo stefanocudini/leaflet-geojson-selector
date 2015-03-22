@@ -1,5 +1,5 @@
 /* 
- * Leaflet GeoJSON List v0.1.1 - 2015-03-22 
+ * Leaflet GeoJSON List v0.1.2 - 2015-03-22 
  * 
  * Copyright 2015 Stefano Cudini 
  * stefano.cudini@gmail.com 
@@ -35,6 +35,8 @@ L.Control.GeoJSONList = L.Control.extend({
 		listLabel: 'name',			//GeoJSON property to generate items list
 		listSortBy: null,			//GeoJSON property to sort items list, default listLabel
 
+		listItemBuild: null,		//function list item builder
+
 		activeListFromLayer: true,	//enable activation of list item from layer
 
 		activeEventList: 'click',	//event on item list that trigger the fitBounds
@@ -61,6 +63,9 @@ L.Control.GeoJSONList = L.Control.extend({
 
 		this.options.listSortBy = this.options.listSortBy || this.options.listLabel;
 
+		if(this.options.listItemBuild)
+			this._itemBuild = this.options.listItemBuild;
+
 		this._layer = layer;
 	},
 
@@ -72,7 +77,7 @@ L.Control.GeoJSONList = L.Control.extend({
 
 		this._container = container;
 
-		this._list = L.DomUtil.create('ul', 'geojson-list-ul', container);
+		this._list = L.DomUtil.create('div', 'geojson-list-group', container);
 
 		this._initToggle();
 	
@@ -97,33 +102,45 @@ L.Control.GeoJSONList = L.Control.extend({
 		map.off('moveend', this._updateList, this);	
 	},
 
+	_itemBuild: function(layer) {
+
+		var item = L.DomUtil.create('a','');
+
+		if(layer.feature.properties.hasOwnProperty(this.options.listLabel))
+			item.innerHTML = '<span>'+layer.feature.properties[this.options.listLabel]+'</span>';
+		else
+			item.innerHTML = '<span>&nsp;</span>';
+
+		return item;
+	},
+
 	_createItem: function(layer) {
 
-		var li = L.DomUtil.create('li', 'geojson-list-li'),
-			a = L.DomUtil.create('a', '', li),
-			that = this;
+		var that = this,
+			item = this._itemBuild.call(this, layer);
 
-		layer.itemList = a;
+		L.DomUtil.addClass(item,'geojson-list-item');
 
-		a.href = '#';
+		layer.itemList = item;
+
 		L.DomEvent
-			.disableClickPropagation(a)
-			.on(a, this.options.activeEventList, L.DomEvent.stop, this)
-			.on(a, this.options.activeEventList, function(e) {
+			.disableClickPropagation(item)
+			.on(item, this.options.activeEventList, L.DomEvent.stop, this)
+			.on(item, this.options.activeEventList, function(e) {
 				
 				that._moveTo( layer );
 
 				that.fire('item-active', {layer: layer });
 
 			}, this)
-			.on(a, 'mouseover', function(e) {
+			.on(item, 'mouseover', function(e) {
 				
 				L.DomUtil.addClass(e.target, this.options.activeClass);
 
 				layer.setStyle( that.options.activeStyle );
 
 			}, this)
-			.on(a, 'mouseout', function(e) {
+			.on(item, 'mouseout', function(e) {
 
 				L.DomUtil.removeClass(e.target, this.options.activeClass);
 
@@ -131,12 +148,7 @@ L.Control.GeoJSONList = L.Control.extend({
 
 			}, this);
 
-		if( layer.feature.properties.hasOwnProperty(this.options.listLabel) )
-			a.innerHTML = '<span>'+layer.feature.properties[this.options.listLabel]+'</span>';
-		else
-			console.log("propertyName '"+this.options.listLabel+"' not found in GeoJSON");
-
-		return li;
+		return item;
 	},
 
 	_updateList: function() {
@@ -169,8 +181,6 @@ L.Control.GeoJSONList = L.Control.extend({
 				});
 			}
 		});
-
-		console.log(sortProp);
 
 		layers.sort(function(a, b) {
 			var ap = a.feature.properties[sortProp],
