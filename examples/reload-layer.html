@@ -1,0 +1,89 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"> 
+<html xmlns="http://www.w3.org/1999/xhtml"> 
+<head> 
+<title></title> 
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" /> 
+<link rel="stylesheet" href="../node_modules/leaflet/dist/leaflet.css" />
+<link rel="stylesheet" href="../src/leaflet-geojson-list.css" />
+<link rel="stylesheet" href="../style.css" />
+<style type="text/css">
+	
+.leaflet-popup-content {
+	font-size: 14px;
+	white-space: pre;
+}
+
+.geojson-list-item {
+	white-space: nowrap;
+	font-weight: bold;
+	text-transform: capitalize;
+	font-size: 14px;
+}
+
+#geofile {
+	margin: 0 20px;
+	font-size: 16px;
+	border: 2px solid #1978cf;
+	box-shadow: 0 0 8px #999;
+}
+#geofile option {
+	padding: 4px;
+}
+
+</style>
+</head>
+
+<body>
+<h3><a href="../"><big>◄</big> Leaflet GeoJSON List</a></h3>
+
+<h4>Reload Layer Example: reload GeoJSON layer at runtime</h4>
+
+<div id="map"></div>
+
+<select id="geofile" size="3" multiple>
+	<option value="italy-regions.json" selected>italy-regions.json</option>
+	<option value="world-countries.json">world-countries.json</option>
+</select>
+
+<pre id="selection">&nbsp;</pre>
+
+<script src="../node_modules/jquery/dist/jquery.min.js"></script>
+<script src="../node_modules/leaflet/dist/leaflet.js"></script>
+<script src="../src/leaflet-geojson-list.js"></script>
+<script>
+
+	var map = new L.Map('map', {
+			zoomControl: false,
+			layers: L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png')
+		});
+
+	map.addControl(L.control.zoom({position:'topright'}));
+
+	var geoLayer = L.geoJson().addTo(map);
+	
+	var geoList = L.control.geoJsonList(geoLayer);
+
+	geoList.on('item-active', function(e) {
+		$('#selection').text(JSON.stringify(e.layer.feature.properties));
+	})
+	.addTo(map);
+	
+	$('#geofile').on('change', function(e) {
+
+		$.getJSON(this.value, function(json) {
+
+			map.removeLayer(geoLayer);
+
+			geoLayer = L.geoJson(json).addTo(map);
+			map.fitBounds( geoLayer.getBounds() );
+
+			geoList.reload( geoLayer );
+		});
+	}).trigger('change');
+
+</script>
+
+<div id="copy"><a href="http://labs.easyblog.it/">Labs</a> &bull; <a rel="author" href="http://labs.easyblog.it/stefano-cudini/">Stefano Cudini</a></div>
+	
+</body>
+</html>

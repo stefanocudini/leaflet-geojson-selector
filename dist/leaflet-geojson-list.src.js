@@ -1,5 +1,5 @@
 /* 
- * Leaflet GeoJSON List v0.1.3 - 2015-03-23 
+ * Leaflet GeoJSON List v0.1.4 - 2015-03-23 
  * 
  * Copyright 2015 Stefano Cudini 
  * stefano.cudini@gmail.com 
@@ -83,6 +83,8 @@ L.Control.GeoJSONList = L.Control.extend({
 	
 		this._updateList();
 
+		//TODO .setMaxBounds( geoLayer.getBounds().pad(0.5) );
+
 		L.DomEvent
 			.on(container, 'mouseover', function (e) {
 				map.scrollWheelZoom.disable();
@@ -92,7 +94,7 @@ L.Control.GeoJSONList = L.Control.extend({
 			});			
 
 		map.whenReady(function(e) {
-			container.style.height = (e.getSize().y)+'px';
+			container.style.height = (e.target.getSize().y)+'px';
 		});
 
 		return container;
@@ -100,6 +102,17 @@ L.Control.GeoJSONList = L.Control.extend({
 	
 	onRemove: function(map) {
 		map.off('moveend', this._updateList, this);	
+	},
+
+	reload: function(layer) {
+
+		//TODO off events
+
+		this._layer = layer;
+
+		this._updateList();
+
+		return this;
 	},
 
 	_itemBuild: function(layer) {
@@ -172,7 +185,7 @@ L.Control.GeoJSONList = L.Control.extend({
 				.on(that.options.activeEventList, function(e) {
 
 					that.fire('item-active', {layer: layer });
-				})			
+				})
 				.on('mouseover', function(e) {
 					
 					layer.setStyle( that.options.activeStyle );

@@ -67,6 +67,8 @@ L.Control.GeoJSONList = L.Control.extend({
 	
 		this._updateList();
 
+		//TODO .setMaxBounds( geoLayer.getBounds().pad(0.5) );
+
 		L.DomEvent
 			.on(container, 'mouseover', function (e) {
 				map.scrollWheelZoom.disable();
@@ -76,7 +78,7 @@ L.Control.GeoJSONList = L.Control.extend({
 			});			
 
 		map.whenReady(function(e) {
-			container.style.height = (e.getSize().y)+'px';
+			container.style.height = (e.target.getSize().y)+'px';
 		});
 
 		return container;
@@ -84,6 +86,17 @@ L.Control.GeoJSONList = L.Control.extend({
 	
 	onRemove: function(map) {
 		map.off('moveend', this._updateList, this);	
+	},
+
+	reload: function(layer) {
+
+		//TODO off events
+
+		this._layer = layer;
+
+		this._updateList();
+
+		return this;
 	},
 
 	_itemBuild: function(layer) {
