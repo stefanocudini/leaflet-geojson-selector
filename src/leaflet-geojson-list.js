@@ -78,7 +78,7 @@ L.Control.GeoJSONList = L.Control.extend({
 			});			
 
 		map.whenReady(function(e) {
-			container.style.height = (e.target.getSize().y)+'px';
+			container.style.height = (map.getSize().y)+'px';
 		});
 
 		return container;

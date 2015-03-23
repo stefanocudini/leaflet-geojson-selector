@@ -1,5 +1,5 @@
 /* 
- * Leaflet GeoJSON List v0.1.4 - 2015-03-23 
+ * Leaflet GeoJSON List v0.1.5 - 2015-03-23 
  * 
  * Copyright 2015 Stefano Cudini 
  * stefano.cudini@gmail.com 
@@ -94,7 +94,7 @@ L.Control.GeoJSONList = L.Control.extend({
 			});			
 
 		map.whenReady(function(e) {
-			container.style.height = (e.target.getSize().y)+'px';
+			container.style.height = (map.getSize().y)+'px';
 		});
 
 		return container;
