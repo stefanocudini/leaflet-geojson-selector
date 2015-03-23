@@ -1,5 +1,5 @@
 /* 
- * Leaflet GeoJSON List v0.1.2 - 2015-03-22 
+ * Leaflet GeoJSON List v0.1.3 - 2015-03-23 
  * 
  * Copyright 2015 Stefano Cudini 
  * stefano.cudini@gmail.com 
@@ -168,11 +168,15 @@ L.Control.GeoJSONList = L.Control.extend({
 
 			if(that.options.activeListFromLayer) {
 				layer
+				.on(that.options.activeEventList, L.DomEvent.stop)
+				.on(that.options.activeEventList, function(e) {
+
+					that.fire('item-active', {layer: layer });
+				})			
 				.on('mouseover', function(e) {
 					
 					layer.setStyle( that.options.activeStyle );
 					L.DomUtil.addClass(layer.itemList, that.options.activeClass);
-
 				})
 				.on('mouseout', function(e) {
 

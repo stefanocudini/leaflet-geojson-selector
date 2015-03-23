@@ -7,7 +7,14 @@
 <link rel="stylesheet" href="../src/leaflet-geojson-list.css" />
 <link rel="stylesheet" href="../style.css" />
 <style type="text/css">
-
+#selection {
+	float: left;
+	margin: 1em;
+	padding: 1em;
+	background: #eee;
+	border: 2px solid #1978cf;
+	box-shadow: 0 0 8px #999;	
+}
 </style>
 </head>
 
@@ -16,6 +23,8 @@
 
 <h4>Custom Item Example: build cutom item list from geojson properties</h4>
 <div id="map"></div>
+
+<pre id="selection"></pre>
 
 <script src="../node_modules/jquery/dist/jquery.min.js"></script>
 <script src="../node_modules/leaflet/dist/leaflet.js"></script>
@@ -29,7 +38,7 @@
 
 	map.addControl(L.control.zoom({position:'topright'}));
 
-	$.getJSON('italy-regions.json', function(json) {
+	$.getJSON('world-countries.json', function(json) {
 
 		var geoLayer = L.geoJson(json).addTo(map);
 		
@@ -40,11 +49,13 @@
 		var geoList = new L.Control.GeoJSONList(geoLayer, {
 			listItemBuild: function(layer) {
 				var item = L.DomUtil.create('div','');
-
-				item.innerHTML = L.Util.template('<b>{name}</b><br />Length: {length} <br /> Area: {area}', layer.feature.properties);
-
+				item.innerHTML = L.Util.template('<b>{name}</b>', layer.feature.properties);
 				return item;
 			}
+		});
+
+		geoList.on('item-active', function(e) {
+			$('#selection').text(JSON.stringify(e.layer.feature.properties));
 		});
 
 		map.addControl(geoList);
