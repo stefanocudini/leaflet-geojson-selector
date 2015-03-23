@@ -156,7 +156,7 @@ L.Control.GeoJSONList = L.Control.extend({
 				.on(that.options.activeEventList, function(e) {
 
 					that.fire('item-active', {layer: layer });
-				})			
+				})
 				.on('mouseover', function(e) {
 					
 					layer.setStyle( that.options.activeStyle );

@@ -16,7 +16,7 @@ a:hover {
 }
 h2, h3, h4 {
 	white-space:nowrap;
-	margin:1em 0 0 0;
+	margin:1em 0;
 }
 h3 a,
 h3 a:hover {
@@ -36,6 +36,17 @@ h3 a:hover {
 	float:left;
 	width:800px;
 	height:400px;	
+}
+#selection {
+	width:780px;
+	clear: both;
+	overflow: hidden;
+	margin: 40px 0;
+	padding: 10px;
+	background: #eee;
+	border: 2px solid #1978cf;
+	border-top: none;
+	box-shadow: 0 0 8px #999;	
 }
 ul {
 	font-size:.85em;
