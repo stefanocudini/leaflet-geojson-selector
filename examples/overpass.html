@@ -1,0 +1,114 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"> 
+<html xmlns="http://www.w3.org/1999/xhtml"> 
+<head> 
+<title></title> 
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" /> 
+<link rel="stylesheet" href="../node_modules/leaflet/dist/leaflet.css" />
+<link rel="stylesheet" href="../src/leaflet-geojson-list.css" />
+<link rel="stylesheet" href="../style.css" />
+<style type="text/css">
+	
+.leaflet-popup-content {
+	font-size: 14px;
+	white-space: pre;
+}
+
+.geojson-list-item {
+	white-space: nowrap;
+	font-weight: bold;
+	text-transform: capitalize;
+	font-size: 14px;
+}
+
+#geofilter {
+	margin: 0 20px;
+	font-size: 16px;
+	border: 2px solid #1978cf;
+	box-shadow: 0 0 8px #999;
+}
+#geofilter option {
+	padding: 4px;
+}
+
+</style>
+</head>
+
+<body>
+<h3><a href="../"><big>◄</big> Leaflet GeoJSON List</a></h3>
+
+<h4>Overpass API Example: load buildings in area</h4>
+
+<div id="map"></div>
+
+<select id="geofilter" size="3" multiple>
+	<option value="way[building=yes]({bbox});(._;>;);" selected>buildings</option>
+</select>
+
+<pre id="selection">&nbsp;</pre>
+
+<script src="../node_modules/jquery/dist/jquery.min.js"></script>
+<script src="../node_modules/leaflet/dist/leaflet.js"></script>
+<script src="../node_modules/osmtogeojson/osmtogeojson.js"></script>
+<script src="../src/leaflet-geojson-list.js"></script>
+<script>
+
+	var map = new L.Map('map', {
+			center: L.latLng(41.89059, 12.51652),
+			zoom: 18,
+			zoomControl: false,
+			layers: L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png')
+		});
+
+	map.addControl(L.control.zoom({position:'topright'}));
+
+	var geoLayer = L.geoJson().addTo(map);
+	
+	var geoList = L.control.geoJsonList(geoLayer, { listLabel:'id' });
+
+	geoList.on('item-active', function(e) {
+		$('#selection').text(JSON.stringify(e.layer.feature.properties));
+	})
+	.addTo(map);
+	
+	$('#geofilter').on('change', function(e) {
+
+		var bb = self.map.getBounds(),
+			sw = bb.getSouthWest(),
+			ne = bb.getNorthEast(),
+			prec = 6,
+			ll = [
+				[ parseFloat(sw.lat.toFixed(prec)), parseFloat(sw.lng.toFixed(prec)) ],
+				[ parseFloat(ne.lat.toFixed(prec)), parseFloat(ne.lng.toFixed(prec)) ]
+			],
+			data = L.Util.template('data=[out:json];'+this.value+'out;', {
+				bbox: [ll[0][0], ll[0][1], ll[1][0], ll[1][1]].join()
+			});
+
+		$.ajax({
+			url: 'http://overpass-api.de/api/interpreter',
+			type:'post',
+			data: data,
+			dataType: 'json',
+			success: function(json) {
+
+				map.removeLayer(geoLayer);
+
+				var geojson = osmtogeojson(json);
+
+				console.log(geojson);
+
+				geoLayer = L.geoJson(geojson).addTo(map);
+
+				map.fitBounds( geoLayer.getBounds() );
+
+				geoList.reload( geoLayer );
+			}
+		});
+	}).trigger('change');
+
+</script>
+
+<div id="copy"><a href="http://labs.easyblog.it/">Labs</a> &bull; <a rel="author" href="http://labs.easyblog.it/stefano-cudini/">Stefano Cudini</a></div>
+	
+</body>
+</html>
