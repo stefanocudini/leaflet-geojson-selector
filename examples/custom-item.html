@@ -8,8 +8,9 @@
 <link rel="stylesheet" href="../style.css" />
 <style type="text/css">
 #selection {
-	float: left;
-	margin: 1em;
+	clear: both;
+	overflow: hidden;
+	margin: 3em 0;
 	padding: 1em;
 	background: #eee;
 	border: 2px solid #1978cf;
@@ -38,7 +39,7 @@
 
 	map.addControl(L.control.zoom({position:'topright'}));
 
-	$.getJSON('world-countries.json', function(json) {
+	$.getJSON('italy-regions.json', function(json) {
 
 		var geoLayer = L.geoJson(json).addTo(map);
 		
@@ -49,7 +50,7 @@
 		var geoList = new L.Control.GeoJSONList(geoLayer, {
 			listItemBuild: function(layer) {
 				var item = L.DomUtil.create('div','');
-				item.innerHTML = L.Util.template('<b>{name}</b>', layer.feature.properties);
+				item.innerHTML = L.Util.template('<b>{name}</b><br>Length: {length} <br>Area: {area} ', layer.feature.properties);
 				return item;
 			}
 		});
