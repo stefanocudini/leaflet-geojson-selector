@@ -1,5 +1,5 @@
 /* 
- * Leaflet GeoJSON List v0.1.5 - 2015-03-23 
+ * Leaflet GeoJSON List v0.1.5 - 2015-03-24 
  * 
  * Copyright 2015 Stefano Cudini 
  * stefano.cudini@gmail.com 
@@ -117,13 +117,14 @@ L.Control.GeoJSONList = L.Control.extend({
 
 	_itemBuild: function(layer) {
 
-		var item = L.DomUtil.create('a','');
+		var item = L.DomUtil.create('a',''),
+			i = 1;
 
 		if(layer.feature.properties.hasOwnProperty(this.options.listLabel))
 			item.innerHTML = '<span>'+layer.feature.properties[this.options.listLabel]+'</span>';
 		else
-			item.innerHTML = '<span>&nsp;</span>';
-
+			item.innerHTML = '<span>&bull;'+(i++)+'</span>';
+		
 		return item;
 	},
 

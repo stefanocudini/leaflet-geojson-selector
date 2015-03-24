@@ -41,7 +41,8 @@
 <div id="map"></div>
 
 <select id="geofilter" size="3" multiple>
-	<option value="way[building=yes]({bbox});(._;>;);" selected>buildings</option>
+	<option value="data=[out:json];way[building=residential](41.878660,12.562383,41.883125,12.571663);(._;>;);out;">buildings</option>
+	<option value="data=[out:json];way[natural=wood](41.951734,12.408971,41.966542,12.446093);(._;>;);out;" selected>woods</option>
 </select>
 
 <pre id="selection">&nbsp;</pre>
@@ -63,7 +64,7 @@
 
 	var geoLayer = L.geoJson().addTo(map);
 	
-	var geoList = L.control.geoJsonList(geoLayer, { listLabel:'id' });
+	var geoList = L.control.geoJsonList(geoLayer, { listLabel: 'id' });
 
 	geoList.on('item-active', function(e) {
 		$('#selection').text(JSON.stringify(e.layer.feature.properties));
@@ -72,23 +73,11 @@
 	
 	$('#geofilter').on('change', function(e) {
 
-		var bb = self.map.getBounds(),
-			sw = bb.getSouthWest(),
-			ne = bb.getNorthEast(),
-			prec = 6,
-			ll = [
-				[ parseFloat(sw.lat.toFixed(prec)), parseFloat(sw.lng.toFixed(prec)) ],
-				[ parseFloat(ne.lat.toFixed(prec)), parseFloat(ne.lng.toFixed(prec)) ]
-			],
-			data = L.Util.template('data=[out:json];'+this.value+'out;', {
-				bbox: [ll[0][0], ll[0][1], ll[1][0], ll[1][1]].join()
-			});
-
 		$.ajax({
-			url: 'http://overpass-api.de/api/interpreter',
-			type:'post',
-			data: data,
+			data: this.value,
+			type: 'post',
 			dataType: 'json',
+			url: 'http://overpass-api.de/api/interpreter',			
 			success: function(json) {
 
 				map.removeLayer(geoLayer);
