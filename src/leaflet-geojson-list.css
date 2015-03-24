@@ -11,8 +11,8 @@
 	z-index:1000;	
 	box-shadow: 0 1px 7px rgba(0,0,0,0.65);
 	margin: 0;
-	max-width: 50%;
-	min-width:26px;
+	
+	min-width: 50px;
 	min-height:26px;
 	overflow-y: scroll;
 }
