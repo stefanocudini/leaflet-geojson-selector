@@ -1,5 +1,5 @@
 /* 
- * Leaflet GeoJSON List v0.1.6 - 2015-03-24 
+ * Leaflet GeoJSON List v0.1.7 - 2015-03-24 
  * 
  * Copyright 2015 Stefano Cudini 
  * stefano.cudini@gmail.com 
@@ -167,14 +167,16 @@ L.Control.GeoJSONList = L.Control.extend({
 				
 				L.DomUtil.addClass(e.target, this.options.activeClass);
 
-				layer.setStyle( that.options.activeStyle );
+				if(layer.setStyle)
+					layer.setStyle( that.options.activeStyle );
 
 			}, this)
 			.on(item, 'mouseout', function(e) {
 
 				L.DomUtil.removeClass(e.target, this.options.activeClass);
 
-				layer.setStyle( that.options.style );
+				if(layer.setStyle)
+					layer.setStyle( that.options.style );
 
 			}, this);
 
@@ -194,7 +196,8 @@ L.Control.GeoJSONList = L.Control.extend({
 
 			layers.push( layer );
 
-			layer.setStyle( that.options.style );
+			if(layer.setStyle)
+				layer.setStyle( that.options.style );
 
 			if(that.options.activeListFromLayer) {
 				layer
@@ -205,12 +208,16 @@ L.Control.GeoJSONList = L.Control.extend({
 				})
 				.on('mouseover', function(e) {
 					
-					layer.setStyle( that.options.activeStyle );
+					if(layer.setStyle)
+						layer.setStyle( that.options.activeStyle );
+
 					L.DomUtil.addClass(layer.itemList, that.options.activeClass);
 				})
 				.on('mouseout', function(e) {
 
-					layer.setStyle( that.options.style );
+					if(layer.setStyle)
+						layer.setStyle( that.options.style );
+
 					L.DomUtil.removeClass(layer.itemList, that.options.activeClass);
 				});
 			}
@@ -284,7 +291,10 @@ L.Control.GeoJSONList = L.Control.extend({
 	},
 
     _moveTo: function(layer) {
-		this._map.fitBounds( layer.getBounds().pad(1) );
+    	if(layer.getBounds)
+			this._map.fitBounds( layer.getBounds().pad(1) );
+		else if(layer.getLatLng)
+			this._map.setView( layer.getLatLng() );
     }
 });
 
