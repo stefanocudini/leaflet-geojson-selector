@@ -15,7 +15,6 @@
 
 .geojson-list-item {
 	white-space: nowrap;
-	font-weight: bold;
 	text-transform: capitalize;
 	font-size: 14px;
 }
@@ -65,7 +64,20 @@
 
 	var geoLayer = L.geoJson().addTo(map);
 	
-	var geoList = L.control.geoJsonList(geoLayer, { listLabel: 'properties.id' });
+	var geoList = L.control.geoJsonList(geoLayer, {
+		listItemBuild: function(layer) {
+			var item = L.DomUtil.create('div','')
+				props = layer.feature.properties,
+				tags = props.tags,
+				t = 'ID: '+props.id+'<br>';
+			
+			for(var p in tags)
+				t += p+': '+tags[p]+'<br>';
+
+			item.innerHTML = t;
+			return item;
+		}
+	});
 
 	geoList.on('item-active', function(e) {
 		$('#selection').text( JSON.stringify(e.layer.feature.properties) );

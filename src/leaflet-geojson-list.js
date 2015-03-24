@@ -121,8 +121,6 @@ L.Control.GeoJSONList = L.Control.extend({
 		var item = L.DomUtil.create('a',''),
 			label = this._getPath(layer.feature, this.options.listLabel);
 
-		console.log( this.options.listLabel, label);
-
 		item.innerHTML = '<span>'+(label || '&nbsp;')+'</span>';
 
 		return item;
@@ -191,7 +189,7 @@ L.Control.GeoJSONList = L.Control.extend({
 					that.fire('item-active', {layer: layer });
 				})
 				.on('mouseover', function(e) {
-					
+	
 					if(layer.setStyle)
 						layer.setStyle( that.options.activeStyle );
 
