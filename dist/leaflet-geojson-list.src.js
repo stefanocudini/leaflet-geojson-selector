@@ -1,5 +1,5 @@
 /* 
- * Leaflet GeoJSON List v0.1.5 - 2015-03-24 
+ * Leaflet GeoJSON List v0.1.6 - 2015-03-24 
  * 
  * Copyright 2015 Stefano Cudini 
  * stefano.cudini@gmail.com 
@@ -30,19 +30,19 @@ L.Control.GeoJSONList = L.Control.extend({
 	includes: L.Mixin.Events,
 
 	options: {
-		collapsed: false,			//collapse panel list
-		position: 'bottomleft',		//position of panel list
-		listLabel: 'name',			//GeoJSON property to generate items list
-		listSortBy: null,			//GeoJSON property to sort items list, default listLabel
+		collapsed: false,				//collapse panel list
+		position: 'bottomleft',			//position of panel list
+		listLabel: 'properties.name',	//GeoJSON property to generate items list
+		listSortBy: null,				//GeoJSON property to sort items list, default listLabel
 
-		listItemBuild: null,		//function list item builder
+		listItemBuild: null,			//function list item builder
 
-		activeListFromLayer: true,	//enable activation of list item from layer
+		activeListFromLayer: true,		//enable activation of list item from layer
 
-		activeEventList: 'click',	//event on item list that trigger the fitBounds
+		activeEventList: 'click',		//event on item list that trigger the fitBounds
 		activeEventLayer: 'mouseover',	//event on item list that trigger the fitBounds
-		activeClass: 'active',		//css class name for active list items
-		activeStyle: {				//style for Active GeoJSON feature
+		activeClass: 'active',			//css class name for active list items
+		activeStyle: {					//style for Active GeoJSON feature
 			color:'#00f',
 			fillColor:'#fa0',
 			weight: 1,
@@ -59,7 +59,7 @@ L.Control.GeoJSONList = L.Control.extend({
 	},
 
 	initialize: function(layer, options) {
-		L.Util.setOptions(this, options);
+		var opt = L.Util.setOptions(this, options || {});
 
 		this.options.listSortBy = this.options.listSortBy || this.options.listLabel;
 
@@ -67,6 +67,8 @@ L.Control.GeoJSONList = L.Control.extend({
 			this._itemBuild = this.options.listItemBuild;
 
 		this._layer = layer;
+
+		console.log(opt);
 	},
 
 	onAdd: function (map) {
@@ -115,16 +117,30 @@ L.Control.GeoJSONList = L.Control.extend({
 		return this;
 	},
 
+	_getPath: function(obj, prop) {
+		var parts = prop.split('.'),
+			last = parts.pop(),
+			len = parts.length,
+			cur = parts[0],
+			i = 1;
+
+		if(len > 0)
+			while((obj = obj[cur]) && i < len)
+				cur = parts[i++];
+
+		if(obj)
+			return obj[last];
+	},
+
 	_itemBuild: function(layer) {
 
 		var item = L.DomUtil.create('a',''),
-			i = 1;
+			label = this._getPath(layer.feature, this.options.listLabel);
 
-		if(layer.feature.properties.hasOwnProperty(this.options.listLabel))
-			item.innerHTML = '<span>'+layer.feature.properties[this.options.listLabel]+'</span>';
-		else
-			item.innerHTML = '<span>&bull;'+(i++)+'</span>';
-		
+		console.log( this.options.listLabel, label);
+
+		item.innerHTML = '<span>'+(label || '&nbsp;')+'</span>';
+
 		return item;
 	},
 
@@ -201,8 +217,8 @@ L.Control.GeoJSONList = L.Control.extend({
 		});
 
 		layers.sort(function(a, b) {
-			var ap = a.feature.properties[sortProp],
-				bp = b.feature.properties[sortProp];
+			var ap = that._getPath(a.feature, sortProp),
+				bp = that._getPath(b.feature, sortProp);
 
 			if(ap < bp)
 				return -1;
@@ -272,8 +288,8 @@ L.Control.GeoJSONList = L.Control.extend({
     }
 });
 
-L.control.geoJsonList = function (options) {
-    return new L.Control.GeoJSONList(options);
+L.control.geoJsonList = function (layer, options) {
+    return new L.Control.GeoJSONList(layer, options);
 };
 
 
