@@ -1,7 +1,23 @@
+/* 
+ * Leaflet GeoJSON Selector v0.1.7 - 2015-07-13 
+ * 
+ * Copyright 2015 Stefano Cudini 
+ * stefano.cudini@gmail.com 
+ * http://labs.easyblog.it/ 
+ * 
+ * Licensed under the MIT license. 
+ * 
+ * Demo: 
+ * http://labs.easyblog.it/maps/leaflet-geojson-selector/ 
+ * 
+ * Source: 
+ * git@github.com:stefanocudini/leaflet-geojson-selector.git 
+ * 
+ */
 
 (function() {
 
-L.Control.GeoJSONList = L.Control.extend({
+L.Control.GeoJSONSelector = L.Control.extend({
 	//
 	//	Name					Data passed			   Description
 	//
@@ -280,8 +296,8 @@ L.Control.GeoJSONList = L.Control.extend({
     }
 });
 
-L.control.geoJsonList = function (layer, options) {
-    return new L.Control.GeoJSONList(layer, options);
+L.control.geoJsonSelector = function (layer, options) {
+    return new L.Control.GeoJSONSelector(layer, options);
 };
 
 

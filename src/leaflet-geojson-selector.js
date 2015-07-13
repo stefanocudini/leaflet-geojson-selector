@@ -1,23 +1,7 @@
-/* 
- * Leaflet GeoJSON List v0.1.7 - 2015-03-24 
- * 
- * Copyright 2015 Stefano Cudini 
- * stefano.cudini@gmail.com 
- * http://labs.easyblog.it/ 
- * 
- * Licensed under the MIT license. 
- * 
- * Demo: 
- * http://labs.easyblog.it/maps/leaflet-geojson-list/ 
- * 
- * Source: 
- * git@github.com:stefanocudini/leaflet-geojson-list.git 
- * 
- */
 
 (function() {
 
-L.Control.GeoJSONList = L.Control.extend({
+L.Control.GeoJSONSelector = L.Control.extend({
 	//
 	//	Name					Data passed			   Description
 	//
@@ -137,8 +121,6 @@ L.Control.GeoJSONList = L.Control.extend({
 		var item = L.DomUtil.create('a',''),
 			label = this._getPath(layer.feature, this.options.listLabel);
 
-		console.log( this.options.listLabel, label);
-
 		item.innerHTML = '<span>'+(label || '&nbsp;')+'</span>';
 
 		return item;
@@ -207,7 +189,7 @@ L.Control.GeoJSONList = L.Control.extend({
 					that.fire('item-active', {layer: layer });
 				})
 				.on('mouseover', function(e) {
-					
+	
 					if(layer.setStyle)
 						layer.setStyle( that.options.activeStyle );
 
@@ -298,8 +280,8 @@ L.Control.GeoJSONList = L.Control.extend({
     }
 });
 
-L.control.geoJsonList = function (layer, options) {
-    return new L.Control.GeoJSONList(layer, options);
+L.control.geoJsonSelector = function (layer, options) {
+    return new L.Control.GeoJSONSelector(layer, options);
 };
 
 

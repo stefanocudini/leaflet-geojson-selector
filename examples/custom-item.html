@@ -4,12 +4,12 @@
 <title></title> 
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /> 
 <link rel="stylesheet" href="../node_modules/leaflet/dist/leaflet.css" />
-<link rel="stylesheet" href="../src/leaflet-geojson-list.css" />
+<link rel="stylesheet" href="../src/leaflet-geojson-selector.css" />
 <link rel="stylesheet" href="../style.css" />
 </head>
 
 <body>
-<h3><a href="../"><big>◄</big> Leaflet GeoJSON List</a></h3>
+<h3><a href="../"><big>◄</big> Leaflet GeoJSON Selector</a></h3>
 
 <h4>Custom Item Example: build cutom item list from geojson properties</h4>
 
@@ -19,7 +19,7 @@
 
 <script src="../node_modules/jquery/dist/jquery.min.js"></script>
 <script src="../node_modules/leaflet/dist/leaflet.js"></script>
-<script src="../src/leaflet-geojson-list.js"></script>
+<script src="../src/leaflet-geojson-selector.js"></script>
 <script>
 
 	var map = new L.Map('map', {
@@ -37,7 +37,7 @@
 		.fitBounds( geoLayer.getBounds() )
 		.setMaxBounds( geoLayer.getBounds().pad(0.5) );
 
-		var geoList = new L.Control.GeoJSONList(geoLayer, {
+		var geoList = new L.Control.GeoJSONSelector(geoLayer, {
 			listItemBuild: function(layer) {
 				var item = L.DomUtil.create('div','');
 				item.innerHTML = L.Util.template('<b>{name}</b><br>Length: {length} <br>Area: {area} ', layer.feature.properties);

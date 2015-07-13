@@ -13,7 +13,7 @@ grunt.initConfig({
 	meta: {
 		banner:
 		'/* \n'+
-		' * Leaflet GeoJSON List v<%= pkg.version %> - <%= grunt.template.today("yyyy-mm-dd") %> \n'+
+		' * Leaflet GeoJSON Selector v<%= pkg.version %> - <%= grunt.template.today("yyyy-mm-dd") %> \n'+
 		' * \n'+
 		' * Copyright <%= grunt.template.today("yyyy") %> <%= pkg.author.name %> \n'+
 		' * <%= pkg.author.email %> \n'+
@@ -52,8 +52,8 @@ grunt.initConfig({
 		},
 		dist: {
 			files: {
-				'dist/leaflet-geojson-list.src.js': ['src/leaflet-geojson-list.js'],			
-				'dist/leaflet-geojson-list.src.css': ['src/leaflet-geojson-list.css']
+				'dist/leaflet-geojson-selector.src.js': ['src/leaflet-geojson-selector.js'],			
+				'dist/leaflet-geojson-selector.src.css': ['src/leaflet-geojson-selector.css']
 			}
 		}
 	},
@@ -63,14 +63,14 @@ grunt.initConfig({
 		},
 		dist: {
 			files: {
-				'dist/leaflet-geojson-list.min.js': ['dist/leaflet-geojson-list.src.js']
+				'dist/leaflet-geojson-selector.min.js': ['dist/leaflet-geojson-selector.src.js']
 			}
 		}
 	},
 	cssmin: {
 		combine: {
 			files: {
-				'dist/leaflet-geojson-list.min.css': ['src/leaflet-geojson-list.css']
+				'dist/leaflet-geojson-selector.min.css': ['src/leaflet-geojson-selector.css']
 			}
 		},
 		options: {
@@ -80,7 +80,7 @@ grunt.initConfig({
 			expand: true,
 			cwd: 'dist/',
 			files: {
-				'dist/leaflet-geojson-list.min.css': ['src/leaflet-geojson-list.css']
+				'dist/leaflet-geojson-selector.min.css': ['src/leaflet-geojson-selector.css']
 			}
 		}
 	}

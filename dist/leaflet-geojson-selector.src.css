@@ -1,5 +1,5 @@
 /* 
- * Leaflet GeoJSON List v0.1.7 - 2015-03-24 
+ * Leaflet GeoJSON Selector v0.1.7 - 2015-07-13 
  * 
  * Copyright 2015 Stefano Cudini 
  * stefano.cudini@gmail.com 
@@ -8,10 +8,10 @@
  * Licensed under the MIT license. 
  * 
  * Demo: 
- * http://labs.easyblog.it/maps/leaflet-geojson-list/ 
+ * http://labs.easyblog.it/maps/leaflet-geojson-selector/ 
  * 
  * Source: 
- * git@github.com:stefanocudini/leaflet-geojson-list.git 
+ * git@github.com:stefanocudini/leaflet-geojson-selector.git 
  * 
  */
  
@@ -27,8 +27,8 @@
 	z-index:1000;	
 	box-shadow: 0 1px 7px rgba(0,0,0,0.65);
 	margin: 0;
-
-	min-width:26px;
+	
+	min-width: 50px;
 	min-height:26px;
 	overflow-y: scroll;
 }

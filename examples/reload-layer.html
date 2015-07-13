@@ -4,7 +4,7 @@
 <title></title> 
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /> 
 <link rel="stylesheet" href="../node_modules/leaflet/dist/leaflet.css" />
-<link rel="stylesheet" href="../src/leaflet-geojson-list.css" />
+<link rel="stylesheet" href="../src/leaflet-geojson-selector.css" />
 <link rel="stylesheet" href="../style.css" />
 <style type="text/css">
 	
@@ -34,7 +34,7 @@
 </head>
 
 <body>
-<h3><a href="../"><big>◄</big> Leaflet GeoJSON List</a></h3>
+<h3><a href="../"><big>◄</big> Leaflet GeoJSON Selector</a></h3>
 
 <h4>Reload Layer Example: reload GeoJSON layer at runtime</h4>
 
@@ -49,7 +49,7 @@
 
 <script src="../node_modules/jquery/dist/jquery.min.js"></script>
 <script src="../node_modules/leaflet/dist/leaflet.js"></script>
-<script src="../src/leaflet-geojson-list.js"></script>
+<script src="../src/leaflet-geojson-selector.js"></script>
 <script>
 
 	var map = new L.Map('map', {
@@ -61,7 +61,7 @@
 
 	var geoLayer = L.geoJson().addTo(map);
 	
-	var geoList = L.control.geoJsonList(geoLayer);
+	var geoList = L.control.geoJsonSelector(geoLayer);
 
 	geoList.on('item-active', function(e) {
 		$('#selection').text(JSON.stringify(e.layer.feature.properties));

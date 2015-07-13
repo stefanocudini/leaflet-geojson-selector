@@ -1,12 +1,12 @@
 {
-  "name": "leaflet-geojson-list",
-  "version": "0.1.7",
-  "description": "Leaflet Control for listing geojson properties in a interactive menu",
+  "name": "leaflet-geojson-selector",
+  "version": "0.2.0",
+  "description": "Leaflet Control for select GeoJSON properties in a interactive menu and map",
   "repository": {
     "type": "git",
-    "url": "git@github.com:stefanocudini/leaflet-geojson-list.git"
+    "url": "git@github.com:stefanocudini/leaflet-geojson-selector.git"
   },
-  "homepage": "http://labs.easyblog.it/maps/leaflet-geojson-list/",
+  "homepage": "http://labs.easyblog.it/maps/leaflet-geojson-selector/",
   "author": {
     "name": "Stefano Cudini",
     "email": "stefano.cudini@gmail.com",
