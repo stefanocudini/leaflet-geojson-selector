@@ -23,6 +23,16 @@ L.Control.GeoJSONSelector = L.Control.extend({
 
 		activeListFromLayer: true,		//enable activation of list item from layer
 
+/*TODO slection styles
+		selectClass: 'selected',
+		selectStyle: {
+			color:'#00f',
+			fillColor:'#f00',
+			weight: 1,
+			opacity: 1,
+			fillOpacity: 0.6
+		},
+*/
 		activeEventList: 'click',		//event on item list that trigger the fitBounds
 		activeEventLayer: 'mouseover',	//event on item list that trigger the fitBounds
 		activeClass: 'active',			//css class name for active list items
