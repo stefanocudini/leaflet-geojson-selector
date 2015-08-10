@@ -73,7 +73,7 @@ L.Control.GeoJSONSelector = L.Control.extend({
 
 		this._container = container;
 
-		this._list = L.DomUtil.create('div', 'geojson-list-group', container);
+		this._list = L.DomUtil.create('ul', 'geojson-list-group', container);
 
 		this._initToggle();
 	
@@ -128,7 +128,7 @@ L.Control.GeoJSONSelector = L.Control.extend({
 
 	_itemBuild: function(layer) {
 
-		var item = L.DomUtil.create('a',''),
+		var item = L.DomUtil.create('li',''),
 			label = this._getPath(layer.feature, this.options.listLabel);
 
 		item.innerHTML = '<span>'+(label || '&nbsp;')+'</span>';

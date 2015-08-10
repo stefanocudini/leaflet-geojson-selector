@@ -1,5 +1,5 @@
 /* 
- * Leaflet GeoJSON Selector v0.1.7 - 2015-07-13 
+ * Leaflet GeoJSON Selector v0.2.1 - 2015-08-10 
  * 
  * Copyright 2015 Stefano Cudini 
  * stefano.cudini@gmail.com 
@@ -39,6 +39,16 @@ L.Control.GeoJSONSelector = L.Control.extend({
 
 		activeListFromLayer: true,		//enable activation of list item from layer
 
+/*TODO slection styles
+		selectClass: 'selected',
+		selectStyle: {
+			color:'#00f',
+			fillColor:'#f00',
+			weight: 1,
+			opacity: 1,
+			fillOpacity: 0.6
+		},
+*/
 		activeEventList: 'click',		//event on item list that trigger the fitBounds
 		activeEventLayer: 'mouseover',	//event on item list that trigger the fitBounds
 		activeClass: 'active',			//css class name for active list items
@@ -79,7 +89,7 @@ L.Control.GeoJSONSelector = L.Control.extend({
 
 		this._container = container;
 
-		this._list = L.DomUtil.create('div', 'geojson-list-group', container);
+		this._list = L.DomUtil.create('ul', 'geojson-list-group', container);
 
 		this._initToggle();
 	
@@ -134,7 +144,7 @@ L.Control.GeoJSONSelector = L.Control.extend({
 
 	_itemBuild: function(layer) {
 
-		var item = L.DomUtil.create('a',''),
+		var item = L.DomUtil.create('li',''),
 			label = this._getPath(layer.feature, this.options.listLabel);
 
 		item.innerHTML = '<span>'+(label || '&nbsp;')+'</span>';
