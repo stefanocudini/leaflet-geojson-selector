@@ -55,7 +55,8 @@
 		var geoList = new L.Control.GeoJSONSelector( geoLayer );
 
 		geoList.on('item-active', function(e) {
-			$('#selection').text( JSON.stringify(e.layer.feature.properties) );
+
+			$('#selection').text( JSON.stringify(e.layers[0].feature.properties) );
 		});
 
 		map.addControl(geoList);

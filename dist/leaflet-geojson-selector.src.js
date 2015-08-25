@@ -1,5 +1,5 @@
 /* 
- * Leaflet GeoJSON Selector v0.2.1 - 2015-08-10 
+ * Leaflet GeoJSON Selector v0.2.2 - 2015-08-25 
  * 
  * Copyright 2015 Stefano Cudini 
  * stefano.cudini@gmail.com 
@@ -22,7 +22,7 @@ L.Control.GeoJSONSelector = L.Control.extend({
 	//	Name					Data passed			   Description
 	//
 	//Managed Events:
-	//	item-active				{layer}                fired on 'activeEventList'
+	//	item-active				{layers}                fired on 'activeEventList'
 	//
 	//Public methods:
 	//  TODO...
@@ -39,7 +39,7 @@ L.Control.GeoJSONSelector = L.Control.extend({
 
 		activeListFromLayer: true,		//enable activation of list item from layer
 
-/*TODO slection styles
+/*TODO selection styles
 		selectClass: 'selected',
 		selectStyle: {
 			color:'#00f',
@@ -167,8 +167,9 @@ L.Control.GeoJSONSelector = L.Control.extend({
 			.on(item, this.options.activeEventList, function(e) {
 				
 				that._moveTo( layer );
+				//zoom to bbox from n layers
 
-				that.fire('item-active', {layer: layer });
+				that.fire('item-active', {layers: [layer] });
 
 			}, this)
 			.on(item, 'mouseover', function(e) {
@@ -212,7 +213,7 @@ L.Control.GeoJSONSelector = L.Control.extend({
 				.on(that.options.activeEventList, L.DomEvent.stop)
 				.on(that.options.activeEventList, function(e) {
 
-					that.fire('item-active', {layer: layer });
+					that.fire('item-active', {layers: [layer] });
 				})
 				.on('mouseover', function(e) {
 	
