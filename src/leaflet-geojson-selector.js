@@ -18,23 +18,18 @@ L.Control.GeoJSONSelector = L.Control.extend({
 		position: 'bottomleft',			//position of panel list
 		listLabel: 'properties.name',	//GeoJSON property to generate items list
 		listSortBy: null,				//GeoJSON property to sort items list, default listLabel
-
 		listItemBuild: null,			//function list item builder
-
 		activeListFromLayer: true,		//enable activation of list item from layer
-
-/*TODO selection styles
-		selectClass: 'selected',
-		selectStyle: {
+		//multiple: false,					//active multiple selection
+		activeEventLayer: 'mouseover',	//event on item list that trigger the fitBounds
+		activeEventList: 'click',		//event on item list that trigger the fitBounds
+		style: {
 			color:'#00f',
-			fillColor:'#f00',
+			fillColor:'#08f',
 			weight: 1,
 			opacity: 1,
-			fillOpacity: 0.6
+			fillOpacity:0.4
 		},
-*/
-		activeEventList: 'click',		//event on item list that trigger the fitBounds
-		activeEventLayer: 'mouseover',	//event on item list that trigger the fitBounds
 		activeClass: 'active',			//css class name for active list items
 		activeStyle: {					//style for Active GeoJSON feature
 			color:'#00f',
@@ -43,12 +38,13 @@ L.Control.GeoJSONSelector = L.Control.extend({
 			opacity: 1,
 			fillOpacity: 0.6
 		},
-		style: {
+		selectClass: 'selected',
+		selectStyle: {
 			color:'#00f',
-			fillColor:'#08f',
+			fillColor:'#f00',
 			weight: 1,
 			opacity: 1,
-			fillOpacity:0.4
+			fillOpacity: 0.6
 		}
 	},
 
