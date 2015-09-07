@@ -6,7 +6,7 @@ L.Control.GeoJSONSelector = L.Control.extend({
 	//	Name					Data passed			   Description
 	//
 	//Managed Events:
-	//	item-active				{layers}                fired on 'activeEventList'
+	//	item-active				{layers}               fired after checked item in list
 	//
 	//Public methods:
 	//  TODO...
@@ -20,9 +20,7 @@ L.Control.GeoJSONSelector = L.Control.extend({
 		listSortBy: null,				//GeoJSON property to sort items list, default listLabel
 		listItemBuild: null,			//function list item builder
 		activeListFromLayer: true,		//enable activation of list item from layer
-		//multiple: false,					//active multiple selection
-		activeEventLayer: 'mouseover',	//event on item list that trigger the fitBounds
-		activeEventList: 'click',		//event on item list that trigger the fitBounds
+		multiple: false,					//active multiple selection
 		style: {
 			color:'#00f',
 			fillColor:'#08f',
@@ -57,8 +55,6 @@ L.Control.GeoJSONSelector = L.Control.extend({
 			this._itemBuild = this.options.listItemBuild;
 
 		this._layer = layer;
-
-		console.log(opt);
 	},
 
 	onAdd: function (map) {
@@ -68,6 +64,10 @@ L.Control.GeoJSONSelector = L.Control.extend({
 		var container = L.DomUtil.create('div', 'geojson-list');
 
 		this._container = container;
+
+		this._baseName = 'geojson-list';
+
+		this._id = this._baseName + L.stamp(this._container);
 
 		this._list = L.DomUtil.create('ul', 'geojson-list-group', container);
 
@@ -124,34 +124,39 @@ L.Control.GeoJSONSelector = L.Control.extend({
 
 	_itemBuild: function(layer) {
 
-		var item = L.DomUtil.create('li',''),
-			label = this._getPath(layer.feature, this.options.listLabel);
+		var html = this._getPath(layer.feature, this.options.listLabel) || '&nbsp;';
 
-		item.innerHTML = '<span>'+(label || '&nbsp;')+'</span>';
-
-		return item;
+		return '<span>'+ html +'</span>';
 	},
 
 	_createItem: function(layer) {
 
 		var that = this,
-			item = this._itemBuild.call(this, layer);
+			item = L.DomUtil.create('li','geojson-list-item'),
+			label = document.createElement('label'),
+			inputType = this.options.multiple ? 'checkbox' : 'radio',
+			input = this._createInputElement(inputType, this._id, false),
+			html = this._itemBuild.call(this, layer);
 
-		L.DomUtil.addClass(item,'geojson-list-item');
+		label.innerHTML = html;
+		label.insertBefore(input, label.firstChild);
+		item.appendChild(label);
 
 		layer.itemList = item;
 
 		L.DomEvent
 			.disableClickPropagation(item)
-			.on(item, this.options.activeEventList, L.DomEvent.stop, this)
-			.on(item, this.options.activeEventList, function(e) {
-				
+			//.on(label, 'click', L.DomEvent.stop, this)
+			.on(label, 'click', function(e) {
+
 				that._moveTo( layer );
-				//zoom to bbox from n layers
+				//TODO zoom to bbox for multiple layers
 
 				that.fire('item-active', {layers: [layer] });
 
-			}, this)
+			}, this);
+
+		L.DomEvent
 			.on(item, 'mouseover', function(e) {
 				
 				L.DomUtil.addClass(e.target, this.options.activeClass);
@@ -172,6 +177,20 @@ L.Control.GeoJSONSelector = L.Control.extend({
 		return item;
 	},
 
+	// IE7 bugs out if you create a radio dynamically, so you have to do it this hacky way (see http://bit.ly/PqYLBe)
+	_createInputElement: function (type, name, checked) {
+
+		var radioHtml = '<input type="'+type+'" name="' + name + '"';
+		if (checked)
+			radioHtml += ' checked="checked"';
+		radioHtml += '/>';
+
+		var radioFragment = document.createElement('div');
+		radioFragment.innerHTML = radioHtml;
+
+		return radioFragment.firstChild;
+	},
+
 	_updateList: function() {
 	
 		var that = this,
@@ -190,8 +209,8 @@ L.Control.GeoJSONSelector = L.Control.extend({
 
 			if(that.options.activeListFromLayer) {
 				layer
-				.on(that.options.activeEventList, L.DomEvent.stop)
-				.on(that.options.activeEventList, function(e) {
+				.on('click', L.DomEvent.stop)
+				.on('click', function(e) {
 
 					that.fire('item-active', {layers: [layer] });
 				})

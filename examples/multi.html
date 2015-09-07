@@ -20,6 +20,12 @@
 		font-size: 14px;
 	}
 
+	.leaflet-container {
+		height: 200px;
+		width: 500px;
+		margin: 10px;
+	}
+
 </style>
 </head>
 
@@ -39,13 +45,18 @@
 <script src="../src/leaflet-geojson-selector.js"></script>
 <script>
 
-	var map = new L.Map('map', {
-			layers: L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'),
-			zoomControl: false			
-		}),
-		geoLayer, geoList;
+	var geoLayer,
+		geoList, geoList2, geoList3;
 		
+	function mapOpts() {
+		return {
+			center: L.latLng([40,0]),
+			layers: new L.TileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'),
+			zoomControl: false			
+		};
+	}
 
+	map = L.map('map', mapOpts() );
 	map.addControl(L.control.zoom({position:'topright'}));
 
 	$.getJSON('italy-regions.json', function(json) {
@@ -57,17 +68,18 @@
 		.setMaxBounds( geoLayer.getBounds().pad(0.5) );
 
 		geoList = new L.Control.GeoJSONSelector( geoLayer );
-
 		geoList.on('item-active', function(e) {
-
-console.log(e)
 			$('#selection').text( JSON.stringify(e.layers[0].feature.properties) );
 		});
-
 		map.addControl(geoList);
+
+		geoList2 = new L.Control.GeoJSONSelector( geoLayer );
+		geoList3 = new L.Control.GeoJSONSelector( geoLayer );
+
+		L.map('map2', mapOpts() ).addControl( geoList2 );
+		L.map('map3', mapOpts() ).addControl( geoList3 );
 		
 	});
-
 </script>
 
 <div id="copy"><a href="http://labs.easyblog.it/">Labs</a> &bull; <a rel="author" href="http://labs.easyblog.it/stefano-cudini/">Stefano Cudini</a></div>

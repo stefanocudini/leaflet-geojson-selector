@@ -6,12 +6,10 @@
 	-moz-border-radius: 4px;
 	-webkit-border-radius: 4px;
 	border-radius: 0;
-	/*background-color: rgba(0, 0, 0, 0.25);*/
 	background-color: rgba(255, 255, 255, 0.6);
 	z-index:1000;	
 	box-shadow: 0 1px 7px rgba(0,0,0,0.65);
 	margin: 0;
-	
 	min-width: 50px;
 	min-height:26px;
 	overflow-y: scroll;
@@ -24,7 +22,6 @@
 	display: block;
 }
 .geojson-list-group {
-/*	border: 1px solid blue;*/
 	list-style: none;
 	padding: 0;
 	margin: 0;
@@ -42,6 +39,11 @@
 	color: #666;	
 	text-decoration: none;
 	border-bottom: 1px solid rgba(0,0,0, 0.5);
+	-moz-user-select: none;
+	-khtml-user-select: none;
+	-webkit-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
 }
 .geojson-list-item:hover,
 .geojson-list-item.active {

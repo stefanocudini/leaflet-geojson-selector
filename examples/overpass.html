@@ -65,21 +65,19 @@
 	
 	var geoList = L.control.geoJsonSelector(geoLayer, {
 		listItemBuild: function(layer) {
-			var item = L.DomUtil.create('div','')
-				props = layer.feature.properties,
+			var props = layer.feature.properties,
 				tags = props.tags,
-				t = 'ID: '+props.id+'<br>';
+				html = 'ID: '+props.id+'<br>';
 			
 			for(var p in tags)
-				t += p+': '+tags[p]+'<br>';
+				html += p+': '+tags[p]+'<br>';
 
-			item.innerHTML = t;
-			return item;
+			return html;
 		}
 	});
 
 	geoList.on('item-active', function(e) {
-		$('#selection').text( JSON.stringify(e.layer.feature.properties) );
+		$('#selection').text( JSON.stringify(e.layers[0].feature.properties) );
 	})
 	.addTo(map);
 	

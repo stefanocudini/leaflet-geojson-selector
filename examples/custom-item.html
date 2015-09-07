@@ -39,14 +39,12 @@
 
 		var geoList = new L.Control.GeoJSONSelector(geoLayer, {
 			listItemBuild: function(layer) {
-				var item = L.DomUtil.create('div','');
-				item.innerHTML = L.Util.template('<b>{name}</b><br>Length: {length} <br>Area: {area} ', layer.feature.properties);
-				return item;
+				return L.Util.template('<b>{name}</b><br>Length: {length} <br>Area: {area} ', layer.feature.properties);
 			}
 		});
 
 		geoList.on('item-active', function(e) {
-			$('#selection').text(JSON.stringify(e.layer.feature.properties));
+			$('#selection').text(JSON.stringify(e.layers[0].feature.properties));
 		});
 
 		map.addControl(geoList);
