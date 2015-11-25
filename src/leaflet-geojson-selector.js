@@ -6,7 +6,7 @@ L.Control.GeoJSONSelector = L.Control.extend({
 	//	Name					Data passed			   Description
 	//
 	//Managed Events:
-	//	item-active				{layers}               fired after checked item in list
+	//	change				{layers}               fired after checked item in list
 	//
 	//Public methods:
 	//  TODO...
@@ -143,6 +143,7 @@ L.Control.GeoJSONSelector = L.Control.extend({
 		item.appendChild(label);
 
 		layer.itemList = item;
+		layer.itemLabel = label;
 
 		L.DomEvent
 			.disableClickPropagation(item)
@@ -152,7 +153,7 @@ L.Control.GeoJSONSelector = L.Control.extend({
 				that._moveTo( layer );
 				//TODO zoom to bbox for multiple layers
 
-				that.fire('item-active', {layers: [layer] });
+				that.fire('change', {layers: [layer] });
 
 			}, this);
 
@@ -211,8 +212,7 @@ L.Control.GeoJSONSelector = L.Control.extend({
 				layer
 				.on('click', L.DomEvent.stop)
 				.on('click', function(e) {
-
-					that.fire('item-active', {layers: [layer] });
+					layer.itemLabel.click();
 				})
 				.on('mouseover', function(e) {
 	
