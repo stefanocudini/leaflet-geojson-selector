@@ -174,10 +174,15 @@ L.Control.GeoJSONSelector = L.Control.extend({
 
 				input.checked = !input.checked;
 
-				that._selectItem(item, input.checked);
-				that._selectLayer(layer, input.checked);				
+				item.selected = input.checked;
 
-				that.fire('change', {layers: [layer], selected: input.checked });
+				that._selectItem(item, input.checked);
+				that._selectLayer(layer, input.checked);		
+
+				that.fire('change', {
+					selected: input.checked,					
+					layers: [layer]
+				});
 
 			}, this);
 
@@ -186,16 +191,18 @@ L.Control.GeoJSONSelector = L.Control.extend({
 				
 				L.DomUtil.addClass(e.target, this.options.activeClass);
 
-				if(layer.setStyle)
-					layer.setStyle( that.options.activeStyle );
+				for (var i = 0; i < that._items.length; i++)
+					if(!that._items[i])
+						that._items[i].layer.setStyle( that.options.activeStyle );						
 
 			}, this)
 			.on(item, 'mouseout', function(e) {
 
-				L.DomUtil.removeClass(e.target, this.options.activeClass);
+				L.DomUtil.removeClass(e.target, that.options.activeClass);
 
-				if(layer.setStyle)
-					layer.setStyle( that.options.style );
+				for (var i = 0; i < that._items.length; i++)
+					if(!that._items[i])
+						that._items[i].layer.setStyle( that.options.style );						
 
 			}, this);
 
