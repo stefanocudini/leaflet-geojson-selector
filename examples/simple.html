@@ -6,21 +6,6 @@
 <link rel="stylesheet" href="../node_modules/leaflet/dist/leaflet.css" />
 <link rel="stylesheet" href="../src/leaflet-geojson-selector.css" />
 <link rel="stylesheet" href="../style.css" />
-<style type="text/css">
-	
-	.leaflet-popup-content {
-		font-size: 14px;
-		white-space: pre;
-	}
-
-	.geojson-list-item {
-		white-space: nowrap;
-		font-weight: bold;
-		text-transform: capitalize;
-		font-size: 14px;
-	}
-
-</style>
 </head>
 
 <body>
@@ -44,7 +29,6 @@
 			zoomControl: false			
 		}),
 		geoLayer, geoList;
-		
 
 	map.addControl(L.control.zoom({position:'topright'}));
 

@@ -1,5 +1,5 @@
 /* 
- * Leaflet GeoJSON Selector v0.3.1 - 2015-11-25 
+ * Leaflet GeoJSON Selector v0.3.2 - 2015-12-03 
  * 
  * Copyright 2015 Stefano Cudini 
  * stefano.cudini@gmail.com 
@@ -49,9 +49,10 @@
 	cursor: pointer;
 	display: block;
 	overflow: hidden;
-	line-height: 20px;
+	line-height: 18px;
+	vertical-align: middle;
+	font-size: 14px;
 	min-width: 120px;
-	padding: 2px 8px;	
 	color: #666;	
 	text-decoration: none;
 	border-bottom: 1px solid rgba(0,0,0, 0.5);
@@ -60,13 +61,29 @@
 	-webkit-user-select: none;
 	-ms-user-select: none;
 	user-select: none;
+
+	white-space: nowrap;
+	text-transform: capitalize;
 }
 .geojson-list-item:hover,
 .geojson-list-item.active {
 	display: block;
 	color: #666;
 	text-decoration: none;
-	background-color: rgba(255,170,0, 0.6);
+	background-color: rgba(255,204,0, 0.6);	/* #FFCC00 */
+}
+.geojson-list-item.selected {
+	color: #666;
+	background-color: rgba(255,136,0, 0.8);	/* #FF8800 */
+}
+.geojson-list-item input {
+	line-height: 18px;
+	margin: 4px;
+}
+.geojson-list-item label {
+	display: block;
+	cursor: pointer;
+	vertical-align: middle;
 }
 .leaflet-control.geojson-list .geojson-list-group {
 	display: block;
