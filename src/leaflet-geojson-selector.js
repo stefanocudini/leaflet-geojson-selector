@@ -139,10 +139,11 @@ L.Control.GeoJSONSelector = L.Control.extend({
 
 	_selectLayer: function(layer, selected) {
 
-		for (var i = 0; i < this._items.length; i++)
-			this._items[i].layer.setStyle( this.options.style );
+		for(var i = 0; i < this._items.length; i++)
+			if(this._items[i].layer.setStyle)
+				this._items[i].layer.setStyle( this.options.style );
 		
-		if(selected)
+		if(selected && layer.setStyle)
 			layer.setStyle( this.options.selectStyle );
 	},	
 
@@ -332,8 +333,30 @@ L.Control.GeoJSONSelector = L.Control.extend({
 	},
 
     _moveTo: function(layer) {
+
+    	//this._map.unproject()
+
+    	//var w = this._container.offsetWidth;
+    	var w = this._container.clientWidth;
+
+		var msize = this._map.getSize(),
+			psize = new L.Point(
+				this._container.clientWidth,
+				this._container.clientHeight
+			);
+
+/*var ne = this._map.containerPointToLatLng( L.point(psize.x, 0) ),
+	sw = this._map.containerPointToLatLng( L.point(msize.x, psize.y) ),
+	bb = L.latLngBounds(sw, ne);
+*/
+/*L.rectangle(bb).addTo(this._map);
+L.marker(bb.getCenter()).addTo(this._map);
+*/
     	if(layer.getBounds)
-			this._map.fitBounds( layer.getBounds() );
+			this._map.fitBounds(layer.getBounds(), {
+				paddingTopLeft: L.point(psize.x, 0),
+				//paddingBottomRight:
+			});
 
 		else if(layer.getLatLng)
 			this._map.setView( layer.getLatLng() );

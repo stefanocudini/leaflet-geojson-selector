@@ -34,11 +34,11 @@ h3 a:hover {
 	border:2px solid #1978cf;
 	box-shadow: 0 0 8px #999;
 	float:left;
-	width:700px;
+	width:600px;
 	height:400px;
 }
 #selection {
-	width:780px;
+	width:580px;
 	clear: both;
 	overflow: hidden;
 	margin: 40px 0;

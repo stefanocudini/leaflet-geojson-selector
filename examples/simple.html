@@ -7,28 +7,22 @@
 <link rel="stylesheet" href="../src/leaflet-geojson-selector.css" />
 <link rel="stylesheet" href="../style.css" />
 </head>
-
 <body>
 <h3><a href="../"><big>◄</big> Leaflet GeoJSON Selector</a></h3>
-
 <h4>Simple Example: <em>Italian regions</em></h4>
-
 <div id="map"></div>
 <div id="map2"></div>
 <div id="map3"></div>
-
 <pre id="selection">&nbsp;</pre>
-
 <script src="../node_modules/jquery/dist/jquery.min.js"></script>
 <script src="../node_modules/leaflet/dist/leaflet.js"></script>
 <script src="../src/leaflet-geojson-selector.js"></script>
 <script>
-
-	var map = new L.Map('map', {
+	var geoLayer, geoList,
+		map = new L.Map('map', {
 			layers: L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'),
 			zoomControl: false			
-		}),
-		geoLayer, geoList;
+		});
 
 	map.addControl(L.control.zoom({position:'topright'}));
 
@@ -39,11 +33,9 @@
 		map.fitBounds( geoLayer.getBounds() )
 			.setMaxBounds( geoLayer.getBounds().pad(0.5) );
 
-		geoList = new L.Control.GeoJSONSelector( geoLayer );
+		geoList = new L.Control.GeoJSONSelector(geoLayer, { zoomToLayer: true });
 
 		geoList.on('change', function(e) {
-
-			console.log(e);
 
 			$('#selection').text( JSON.stringify(e.layers[0].feature.properties) );
 		});
@@ -51,7 +43,6 @@
 		map.addControl(geoList);
 		
 	});
-
 </script>
 
 <div id="copy"><a href="http://labs.easyblog.it/">Labs</a> &bull; <a rel="author" href="http://labs.easyblog.it/stefano-cudini/">Stefano Cudini</a></div>

@@ -1,7 +1,7 @@
 /* 
- * Leaflet GeoJSON Selector v0.3.2 - 2015-12-03 
+ * Leaflet GeoJSON Selector v0.3.3 - 2016-03-22 
  * 
- * Copyright 2015 Stefano Cudini 
+ * Copyright 2016 Stefano Cudini 
  * stefano.cudini@gmail.com 
  * http://labs.easyblog.it/ 
  * 
@@ -155,10 +155,11 @@ L.Control.GeoJSONSelector = L.Control.extend({
 
 	_selectLayer: function(layer, selected) {
 
-		for (var i = 0; i < this._items.length; i++)
-			this._items[i].layer.setStyle( this.options.style );
+		for(var i = 0; i < this._items.length; i++)
+			if(this._items[i].layer.setStyle)
+				this._items[i].layer.setStyle( this.options.style );
 		
-		if(selected)
+		if(selected && layer.setStyle)
 			layer.setStyle( this.options.selectStyle );
 	},	
 
@@ -190,10 +191,15 @@ L.Control.GeoJSONSelector = L.Control.extend({
 
 				input.checked = !input.checked;
 
-				that._selectItem(item, input.checked);
-				that._selectLayer(layer, input.checked);				
+				item.selected = input.checked;
 
-				that.fire('change', {layers: [layer], selected: input.checked });
+				that._selectItem(item, input.checked);
+				that._selectLayer(layer, input.checked);		
+
+				that.fire('change', {
+					selected: input.checked,					
+					layers: [layer]
+				});
 
 			}, this);
 
@@ -202,16 +208,18 @@ L.Control.GeoJSONSelector = L.Control.extend({
 				
 				L.DomUtil.addClass(e.target, this.options.activeClass);
 
-				if(layer.setStyle)
-					layer.setStyle( that.options.activeStyle );
+				for (var i = 0; i < that._items.length; i++)
+					if(!that._items[i])
+						that._items[i].layer.setStyle( that.options.activeStyle );						
 
 			}, this)
 			.on(item, 'mouseout', function(e) {
 
-				L.DomUtil.removeClass(e.target, this.options.activeClass);
+				L.DomUtil.removeClass(e.target, that.options.activeClass);
 
-				if(layer.setStyle)
-					layer.setStyle( that.options.style );
+				for (var i = 0; i < that._items.length; i++)
+					if(!that._items[i])
+						that._items[i].layer.setStyle( that.options.style );						
 
 			}, this);
 
@@ -341,8 +349,30 @@ L.Control.GeoJSONSelector = L.Control.extend({
 	},
 
     _moveTo: function(layer) {
+
+    	//this._map.unproject()
+
+    	//var w = this._container.offsetWidth;
+    	var w = this._container.clientWidth;
+
+		var msize = this._map.getSize(),
+			psize = new L.Point(
+				this._container.clientWidth,
+				this._container.clientHeight
+			);
+
+/*var ne = this._map.containerPointToLatLng( L.point(psize.x, 0) ),
+	sw = this._map.containerPointToLatLng( L.point(msize.x, psize.y) ),
+	bb = L.latLngBounds(sw, ne);
+*/
+/*L.rectangle(bb).addTo(this._map);
+L.marker(bb.getCenter()).addTo(this._map);
+*/
     	if(layer.getBounds)
-			this._map.fitBounds( layer.getBounds() );
+			this._map.fitBounds(layer.getBounds(), {
+				paddingTopLeft: L.point(psize.x, 0),
+				//paddingBottomRight:
+			});
 
 		else if(layer.getLatLng)
 			this._map.setView( layer.getLatLng() );
