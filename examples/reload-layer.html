@@ -63,7 +63,7 @@
 	
 	var geoList = L.control.geoJsonSelector(geoLayer);
 
-	geoList.on('item-active', function(e) {
+	geoList.on('change', function(e) {
 		$('#selection').text(JSON.stringify(e.layers[0].feature.properties));
 	})
 	.addTo(map);

@@ -36,9 +36,8 @@
 
 		geoLayer = L.geoJson(json).addTo(map);
 		
-		map
-		.fitBounds( geoLayer.getBounds() )
-		.setMaxBounds( geoLayer.getBounds().pad(0.5) );
+		map.fitBounds( geoLayer.getBounds() )
+			.setMaxBounds( geoLayer.getBounds().pad(0.5) );
 
 		geoList = new L.Control.GeoJSONSelector( geoLayer );
 
