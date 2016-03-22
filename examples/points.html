@@ -1,0 +1,53 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"> 
+<html xmlns="http://www.w3.org/1999/xhtml"> 
+<head> 
+<title></title> 
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" /> 
+<link rel="stylesheet" href="../node_modules/leaflet/dist/leaflet.css" />
+<link rel="stylesheet" href="../src/leaflet-geojson-selector.css" />
+<link rel="stylesheet" href="../style.css" />
+</head>
+<body>
+<h3><a href="../"><big>◄</big> Leaflet GeoJSON Selector</a></h3>
+<h4>Points Example: <em>Italian regions Centroids</em></h4>
+<div id="map"></div>
+<div id="map2"></div>
+<div id="map3"></div>
+<pre id="selection">&nbsp;</pre>
+<script src="../node_modules/jquery/dist/jquery.min.js"></script>
+<script src="../node_modules/leaflet/dist/leaflet.js"></script>
+<script src="../src/leaflet-geojson-selector.js"></script>
+<script>
+	var geoLayer, geoList,
+		map = new L.Map('map', {
+			layers: L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'),
+			zoomControl: false			
+		});
+
+	map.addControl(L.control.zoom({position:'topright'}));
+
+	$.getJSON('italy-regions-centroids.json', function(json) {
+
+		geoLayer = L.geoJson(json).addTo(map);
+		
+		map.fitBounds( geoLayer.getBounds() )
+			.setMaxBounds( geoLayer.getBounds().pad(0.5) );
+
+		geoList = new L.Control.GeoJSONSelector(geoLayer, { zoomToLayer: true });
+
+		geoList.on('change', function(e) {
+
+			console.log(e);
+
+			$('#selection').text( JSON.stringify(e.layers[0].feature.properties) );
+		});
+
+		map.addControl(geoList);
+		
+	});
+</script>
+
+<div id="copy"><a href="http://labs.easyblog.it/">Labs</a> &bull; <a rel="author" href="http://labs.easyblog.it/stefano-cudini/">Stefano Cudini</a></div>
+	
+</body>
+</html>

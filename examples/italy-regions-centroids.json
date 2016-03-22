@@ -1,0 +1,27 @@
+{
+"type": "FeatureCollection",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+                                                                                
+"features": [
+{ "type": "Feature", "properties": { "id": 1, "name": "piemonte", "length": 1236869.3688, "area": 25394103941.599998474121094 }, "geometry": { "type": "Point", "coordinates": [ 7.9234934646534, 45.060434510910426 ] } },
+{ "type": "Feature", "properties": { "id": 2, "name": "valle d'aosta", "length": 311165.134877, "area": 3259040961.300000190734863 }, "geometry": { "type": "Point", "coordinates": [ 7.387371468698934, 45.729793397029212 ] } },
+{ "type": "Feature", "properties": { "id": 3, "name": "lombardia", "length": 1411265.07152, "area": 23862698613.599998474121094 }, "geometry": { "type": "Point", "coordinates": [ 9.76912494384448, 45.620526883113953 ] } },
+{ "type": "Feature", "properties": { "id": 4, "name": "trentino-alto adige\/sudtirol", "length": 800534.132495, "area": 13608018378.5 }, "geometry": { "type": "Point", "coordinates": [ 11.281837212264195, 46.441293558688379 ] } },
+{ "type": "Feature", "properties": { "id": 5, "name": "veneto", "length": 1057855.9676, "area": 18405499479.400001525878906 }, "geometry": { "type": "Point", "coordinates": [ 11.858635266169282, 45.65135430755187 ] } },
+{ "type": "Feature", "properties": { "id": 6, "name": "friuli venezia giulia", "length": 667489.73706, "area": 7864293935.039999961853027 }, "geometry": { "type": "Point", "coordinates": [ 13.055599712004474, 46.151449369525295 ] } },
+{ "type": "Feature", "properties": { "id": 7, "name": "liguria", "length": 834224.468035, "area": 5415464956.439999580383301 }, "geometry": { "type": "Point", "coordinates": [ 8.704347679144968, 44.264337389917159 ] } },
+{ "type": "Feature", "properties": { "id": 8, "name": "emilia-romagna", "length": 1164723.05925, "area": 22451465521.900001525878906 }, "geometry": { "type": "Point", "coordinates": [ 11.038370070694492, 44.525671872112277 ] } },
+{ "type": "Feature", "properties": { "id": 9, "name": "toscana", "length": 1316658.00191, "area": 22984426772.0 }, "geometry": { "type": "Point", "coordinates": [ 11.125968194206569, 43.450596410406227 ] } },
+{ "type": "Feature", "properties": { "id": 10, "name": "umbria", "length": 620315.16993, "area": 8464007915.760000228881836 }, "geometry": { "type": "Point", "coordinates": [ 12.489918374340396, 42.965925326044136 ] } },
+{ "type": "Feature", "properties": { "id": 11, "name": "marche", "length": 629209.047201, "area": 9401177971.950000762939453 }, "geometry": { "type": "Point", "coordinates": [ 13.137754205689735, 43.348191271410158 ] } },
+{ "type": "Feature", "properties": { "id": 12, "name": "lazio", "length": 1055355.14651, "area": 17227617801.299999237060547 }, "geometry": { "type": "Point", "coordinates": [ 12.766418019625052, 41.979508132029359 ] } },
+{ "type": "Feature", "properties": { "id": 13, "name": "abruzzo", "length": 614513.705789, "area": 10829102919.5 }, "geometry": { "type": "Point", "coordinates": [ 13.854750624992612, 42.227567318093691 ] } },
+{ "type": "Feature", "properties": { "id": 14, "name": "molise", "length": 433874.67797, "area": 4461149496.359999656677246 }, "geometry": { "type": "Point", "coordinates": [ 14.59590002707427, 41.684336774322816 ] } },
+{ "type": "Feature", "properties": { "id": 15, "name": "campania", "length": 892379.131913, "area": 13663989800.100000381469727 }, "geometry": { "type": "Point", "coordinates": [ 14.840184741519346, 40.859541713006756 ] } },
+{ "type": "Feature", "properties": { "id": 16, "name": "puglia", "length": 1176242.99348, "area": 19537077223.0 }, "geometry": { "type": "Point", "coordinates": [ 16.620151828553368, 40.98457469614506 ] } },
+{ "type": "Feature", "properties": { "id": 17, "name": "basilicata", "length": 614219.205497, "area": 10073260222.600000381469727 }, "geometry": { "type": "Point", "coordinates": [ 16.081513086108298, 40.499834506171283 ] } },
+{ "type": "Feature", "properties": { "id": 18, "name": "calabria", "length": 838194.35773, "area": 15216683867.799999237060547 }, "geometry": { "type": "Point", "coordinates": [ 16.348024537585715, 39.068175002318881 ] } },
+{ "type": "Feature", "properties": { "id": 19, "name": "sicilia", "length": 1339973.64188, "area": 25824775591.400001525878906 }, "geometry": { "type": "Point", "coordinates": [ 14.146974092654165, 37.588434530754036 ] } },
+{ "type": "Feature", "properties": { "id": 20, "name": "sardegna", "length": 1460657.08082, "area": 24094165311.900001525878906 }, "geometry": { "type": "Point", "coordinates": [ 9.030305051968869, 40.08804809165639 ] } }
+]
+}
