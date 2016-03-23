@@ -16,12 +16,19 @@ L.Control.GeoJSONSelector = L.Control.extend({
 	options: {
 		collapsed: false,				//collapse panel list
 		position: 'bottomleft',			//position of panel list
+		
 		listLabel: 'properties.name',	//GeoJSON property to generate items list
 		listSortBy: null,				//GeoJSON property to sort items list, default listLabel
 		listItemBuild: null,			//function list item builder
+		
 		activeListFromLayer: true,		//enable activation of list item from layer
 		zoomToLayer: false,
-		multiple: false,					//active multiple selection
+		
+		listOnlyVisibleLayers: false,	//show list of item of layers visible in map canvas
+
+		multiple: false,				//active multiple selection
+		//TODO
+
 		style: {
 			color:'#00f',
 			fillColor:'#08f',
@@ -74,10 +81,6 @@ L.Control.GeoJSONSelector = L.Control.extend({
 
 		this._items = [];
 
-		this._initToggle();
-	
-		this._updateList();
-
 		L.DomEvent
 			.on(container, 'mouseover', function (e) {
 				map.scrollWheelZoom.disable();
@@ -86,9 +89,15 @@ L.Control.GeoJSONSelector = L.Control.extend({
 				map.scrollWheelZoom.enable();
 			});
 
+		if(this.options.listOnlyVisibleLayers)
+			map.on('moveend', this._updateListVisible, this);
+
 		map.whenReady(function(e) {
 			container.style.height = (map.getSize().y)+'px';
 		});
+
+		this._initToggle();
+		this._updateList();
 
 		return container;
 	},
@@ -234,6 +243,7 @@ L.Control.GeoJSONSelector = L.Control.extend({
 
 		//TODO SORTby
 
+		//this._list.style.minWidth = '';
 		this._list.innerHTML = '';
 		this._layer.eachLayer(function(layer) {
 
@@ -278,6 +288,22 @@ L.Control.GeoJSONSelector = L.Control.extend({
 
 		for (var i=0; i<layers.length; i++)
 			this._list.appendChild( this._createItem( layers[i] ) );
+	},
+
+	_updateListVisible: function() {
+
+		var that = this,
+			layerbb, visible;
+		
+		this._layer.eachLayer(function(layer) {
+
+			if(layer.getBounds)
+				visible = that._map.getBounds().intersects( layer.getBounds() );
+			else if(layer.getLatLng)
+				visible = that._map.getBounds().contains( layer.getLatLng() );
+
+			layer.itemList.style.display = visible ? 'block':'none';
+		});
 	},
 
 	_initToggle: function () {
@@ -359,7 +385,7 @@ L.marker(bb.getCenter()).addTo(this._map);
 		else if (pos.indexOf('left') !== -1) {
 			fitOpts.paddingTopLeft = L.point(psize.x, 0);
 		}
-		
+
     	if(layer.getBounds)
 			this._map.fitBounds(layer.getBounds(), fitOpts);
 

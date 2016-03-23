@@ -20,11 +20,8 @@
 <script>
 	var geoLayer, geoList,
 		map = new L.Map('map', {
-			layers: L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'),
-			zoomControl: false	
+			layers: L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png')
 		});
-
-	map.addControl(L.control.zoom({position:'topleft'}));
 
 	$.getJSON('italy-regions-centroids.json', function(json) {
 
@@ -34,7 +31,9 @@
 			.setMaxBounds( geoLayer.getBounds().pad(0.5) );
 
 		geoList = new L.Control.GeoJSONSelector(geoLayer, {
-			zoomToLayer: true
+			position: 'topright',
+			zoomToLayer: true,
+			listOnlyVisibleLayers: true
 		});
 
 		geoList.on('change', function(e) {

@@ -34,7 +34,8 @@
 			.setMaxBounds( geoLayer.getBounds().pad(0.5) );
 
 		geoList = new L.Control.GeoJSONSelector(geoLayer, {
-			zoomToLayer: true
+			zoomToLayer: true,
+			listOnlyVisibleLayers: true
 		});
 
 		geoList.on('change', function(e) {
