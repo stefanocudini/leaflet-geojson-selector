@@ -1,6 +1,6 @@
 {
   "name": "leaflet-geojson-selector",
-  "version": "0.3.3",
+  "version": "0.3.4",
   "description": "Leaflet Control for select GeoJSON properties in a interactive menu and map",
   "repository": {
     "type": "git",

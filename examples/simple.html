@@ -33,7 +33,9 @@
 		map.fitBounds( geoLayer.getBounds() )
 			.setMaxBounds( geoLayer.getBounds().pad(0.5) );
 
-		geoList = new L.Control.GeoJSONSelector(geoLayer, { zoomToLayer: true });
+		geoList = new L.Control.GeoJSONSelector(geoLayer, {
+			zoomToLayer: true
+		});
 
 		geoList.on('change', function(e) {
 

@@ -21,10 +21,10 @@
 	var geoLayer, geoList,
 		map = new L.Map('map', {
 			layers: L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'),
-			zoomControl: false			
+			zoomControl: false	
 		});
 
-	map.addControl(L.control.zoom({position:'topright'}));
+	map.addControl(L.control.zoom({position:'topleft'}));
 
 	$.getJSON('italy-regions-centroids.json', function(json) {
 
@@ -33,11 +33,11 @@
 		map.fitBounds( geoLayer.getBounds() )
 			.setMaxBounds( geoLayer.getBounds().pad(0.5) );
 
-		geoList = new L.Control.GeoJSONSelector(geoLayer, { zoomToLayer: true });
+		geoList = new L.Control.GeoJSONSelector(geoLayer, {
+			zoomToLayer: true
+		});
 
 		geoList.on('change', function(e) {
-
-			console.log(e);
 
 			$('#selection').text( JSON.stringify(e.layers[0].feature.properties) );
 		});

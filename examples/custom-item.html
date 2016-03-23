@@ -23,11 +23,12 @@
 <script>
 
 	var map = new L.Map('map', {
-			zoomControl: false,
-			layers: L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png')
+			layers: L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'),
+			attributionControl: false,
+			zoomControl: false
 		});
 
-	map.addControl(L.control.zoom({position:'topright'}));
+	map.addControl(L.control.zoom({ position:'topleft' }));
 
 	$.getJSON('italy-regions.json', function(json) {
 
@@ -38,8 +39,10 @@
 		.setMaxBounds( geoLayer.getBounds().pad(0.5) );
 
 		var geoList = new L.Control.GeoJSONSelector(geoLayer, {
+			position: 'bottomright',
+			zoomToLayer: true,
 			listItemBuild: function(layer) {
-				return L.Util.template('<b>{name}</b><br>Length: {length} <br>Area: {area} ', layer.feature.properties);
+				return L.Util.template('<small><b>{name}</b><br>Length: {length} <br>Area: {area} </small>', layer.feature.properties);
 			}
 		});
 

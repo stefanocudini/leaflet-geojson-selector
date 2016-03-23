@@ -94,8 +94,6 @@
 
 				var geojson = osmtogeojson(json);
 
-				//console.log(geojson);
-
 				geoLayer = L.geoJson(geojson).addTo(map);
 
 				map.fitBounds( geoLayer.getBounds() );

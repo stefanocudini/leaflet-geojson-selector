@@ -1,5 +1,5 @@
 /* 
- * Leaflet GeoJSON Selector v0.3.3 - 2016-03-22 
+ * Leaflet GeoJSON Selector v0.3.4 - 2016-03-23 
  * 
  * Copyright 2016 Stefano Cudini 
  * stefano.cudini@gmail.com 
@@ -350,16 +350,16 @@ L.Control.GeoJSONSelector = L.Control.extend({
 
     _moveTo: function(layer) {
 
-    	//this._map.unproject()
+    	var pos = this.options.position,
+    		w = this._map._controlCorners[ pos ].clientWidth;
 
-    	//var w = this._container.offsetWidth;
-    	var w = this._container.clientWidth;
-
-		var msize = this._map.getSize(),
-			psize = new L.Point(
+		var psize = new L.Point(
 				this._container.clientWidth,
-				this._container.clientHeight
-			);
+				this._container.clientHeight),
+			fitOpts = {
+				paddingTopLeft: null,
+				paddingBottomRight: null
+			};
 
 /*var ne = this._map.containerPointToLatLng( L.point(psize.x, 0) ),
 	sw = this._map.containerPointToLatLng( L.point(msize.x, psize.y) ),
@@ -368,11 +368,16 @@ L.Control.GeoJSONSelector = L.Control.extend({
 /*L.rectangle(bb).addTo(this._map);
 L.marker(bb.getCenter()).addTo(this._map);
 */
+
+		if (pos.indexOf('right') !== -1) {
+			fitOpts.paddingBottomRight = L.point(psize.x, 0);
+		}
+		else if (pos.indexOf('left') !== -1) {
+			fitOpts.paddingTopLeft = L.point(psize.x, 0);
+		}
+		
     	if(layer.getBounds)
-			this._map.fitBounds(layer.getBounds(), {
-				paddingTopLeft: L.point(psize.x, 0),
-				//paddingBottomRight:
-			});
+			this._map.fitBounds(layer.getBounds(), fitOpts);
 
 		else if(layer.getLatLng)
 			this._map.setView( layer.getLatLng() );
