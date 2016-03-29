@@ -29,6 +29,7 @@ L.Control.GeoJSONSelector = L.Control.extend({
 		multiple: false,				//active multiple selection
 		//TODO
 
+		//TODO Leflet to CSS style converter
 		style: {
 			color:'#00f',
 			fillColor:'#08f',
@@ -201,18 +202,20 @@ L.Control.GeoJSONSelector = L.Control.extend({
 				
 				L.DomUtil.addClass(e.target, this.options.activeClass);
 
-				for (var i = 0; i < that._items.length; i++)
+/*				for (var i = 0; i < that._items.length; i++)
 					if(!that._items[i])
-						that._items[i].layer.setStyle( that.options.activeStyle );						
+						that._items[i].layer.setStyle( that.options.activeStyle );*/
+				item.layer.setStyle( that.options.activeStyle );
 
 			}, this)
 			.on(item, 'mouseout', function(e) {
 
 				L.DomUtil.removeClass(e.target, that.options.activeClass);
 
-				for (var i = 0; i < that._items.length; i++)
+/*				for (var i = 0; i < that._items.length; i++)
 					if(!that._items[i])
-						that._items[i].layer.setStyle( that.options.style );						
+						that._items[i].layer.setStyle( that.options.style );*/
+				item.layer.setStyle( that.options.style );
 
 			}, this);
 
@@ -256,21 +259,21 @@ L.Control.GeoJSONSelector = L.Control.extend({
 				layer
 				.on('click', L.DomEvent.stop)
 				.on('click', function(e) {
-					layer.itemLabel.click();
+					e.target.itemLabel.click();
 				})
 				.on('mouseover', function(e) {
 	
-					if(layer.setStyle)
-						layer.setStyle( that.options.activeStyle );
-
-					L.DomUtil.addClass(layer.itemList, that.options.activeClass);
+					if(e.target.setStyle && !e.target.itemList.selected) {
+						e.target.setStyle( that.options.activeStyle );
+						L.DomUtil.addClass(e.target.itemList, that.options.activeClass);
+					}
 				})
 				.on('mouseout', function(e) {
 
-					if(layer.setStyle)
-						layer.setStyle( that.options.style );
-
-					L.DomUtil.removeClass(layer.itemList, that.options.activeClass);
+					if(e.target.setStyle && !e.target.itemList.selected) {
+						e.target.setStyle( that.options.style );
+						L.DomUtil.removeClass(e.target.itemList, that.options.activeClass);
+					}
 				});
 			}
 		});
