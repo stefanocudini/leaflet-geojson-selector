@@ -3,7 +3,7 @@
 
 L.Control.GeoJSONSelector = L.Control.extend({
 	//
-	//	Name					Data passed			   Description
+	//	Name				Data passed			   Description
 	//
 	//Managed Events:
 	//	change				{layers}               fired after checked item in list
@@ -134,7 +134,6 @@ L.Control.GeoJSONSelector = L.Control.extend({
 	},
 
 	_itemBuild: function(layer) {
-
 		return this._getPath(layer.feature, this.options.listLabel) || '&nbsp;';
 	},
 
@@ -150,16 +149,29 @@ L.Control.GeoJSONSelector = L.Control.extend({
 	_selectLayer: function(layer, selected) {
 
 		for(var i = 0; i < this._items.length; i++)
-			if(this._items[i].layer.setStyle)
+			//if(this._items[i].layer.setStyle)
 				this._items[i].layer.setStyle( this.options.style );
 		
 		if(selected && layer.setStyle)
 			layer.setStyle( this.options.selectStyle );
+	},
+
+	_overItem: function(item) {
+		if(!item.selected) {
+			L.DomUtil.addClass(item, this.options.activeClass);
+			item.layer.setStyle( this.options.activeStyle );
+		}
+	},
+	_outItem: function(item) {
+		if(!item.selected) {
+			L.DomUtil.removeClass(item, this.options.activeClass);
+			item.layer.setStyle( this.options.style );
+		}
 	},	
 
 	_createItem: function(layer) {
 
-		var that = this,
+		var self = this,
 			item = L.DomUtil.create('li','geojson-list-item'),
 			label = document.createElement('label'),
 			inputType = this.options.multiple ? 'checkbox' : 'radio',
@@ -175,47 +187,42 @@ L.Control.GeoJSONSelector = L.Control.extend({
 		layer.itemLabel = label;
 
 		L.DomEvent
-			//.disableClickPropagation(item)
 			.on(label, 'click', L.DomEvent.stop, this)
 			.on(label, 'click', function(e) {
 
-				if(that.options.zoomToLayer)
-					that._moveTo( layer );
+				input.checked = !input.checked;
+				
+
+				if(!self.options.multiple) {	//deselect all items
+					for (var i = 0; i < self._items.length; i++)
+						self._items[i].selected = false;
+				}
+
+				item.selected = !item.selected;	
+
+				self._selectItem(item, item.selected);
+				self._selectLayer(item.layer, item.selected);
+
+				if(self.options.zoomToLayer)
+					self._moveTo( layer );
 				//TODO zoom to bbox for multiple layers
 
-				input.checked = !input.checked;
-
-				item.selected = input.checked;
-
-				that._selectItem(item, input.checked);
-				that._selectLayer(layer, input.checked);		
-
-				that.fire('change', {
-					selected: input.checked,					
-					layers: [layer]
-				});
+				self.fire('change', {
+					selected: item.selected,					
+					layers: [item.layer]
+				});		
 
 			}, this);
 
 		L.DomEvent
 			.on(item, 'mouseover', function(e) {
-				
-				L.DomUtil.addClass(e.target, this.options.activeClass);
 
-/*				for (var i = 0; i < that._items.length; i++)
-					if(!that._items[i])
-						that._items[i].layer.setStyle( that.options.activeStyle );*/
-				item.layer.setStyle( that.options.activeStyle );
+				self._overItem(item);
 
 			}, this)
 			.on(item, 'mouseout', function(e) {
 
-				L.DomUtil.removeClass(e.target, that.options.activeClass);
-
-/*				for (var i = 0; i < that._items.length; i++)
-					if(!that._items[i])
-						that._items[i].layer.setStyle( that.options.style );*/
-				item.layer.setStyle( that.options.style );
+				self._outItem(item);
 
 			}, this);
 
@@ -259,21 +266,16 @@ L.Control.GeoJSONSelector = L.Control.extend({
 				layer
 				.on('click', L.DomEvent.stop)
 				.on('click', function(e) {
+
 					e.target.itemLabel.click();
 				})
 				.on('mouseover', function(e) {
-	
-					if(e.target.setStyle && !e.target.itemList.selected) {
-						e.target.setStyle( that.options.activeStyle );
-						L.DomUtil.addClass(e.target.itemList, that.options.activeClass);
-					}
+
+					that._overItem(e.target.itemList);
 				})
 				.on('mouseout', function(e) {
 
-					if(e.target.setStyle && !e.target.itemList.selected) {
-						e.target.setStyle( that.options.style );
-						L.DomUtil.removeClass(e.target.itemList, that.options.activeClass);
-					}
+					that._outItem(e.target.itemList);
 				});
 			}
 		});
