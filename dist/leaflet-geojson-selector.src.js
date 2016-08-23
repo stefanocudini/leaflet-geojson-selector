@@ -1,5 +1,5 @@
 /* 
- * Leaflet GeoJSON Selector v0.3.5 - 2016-03-23 
+ * Leaflet GeoJSON Selector v0.4.0 - 2016-08-23 
  * 
  * Copyright 2016 Stefano Cudini 
  * stefano.cudini@gmail.com 
@@ -19,7 +19,7 @@
 
 L.Control.GeoJSONSelector = L.Control.extend({
 	//
-	//	Name					Data passed			   Description
+	//	Name				Data passed			   Description
 	//
 	//Managed Events:
 	//	change				{layers}               fired after checked item in list
@@ -40,11 +40,12 @@ L.Control.GeoJSONSelector = L.Control.extend({
 		activeListFromLayer: true,		//enable activation of list item from layer
 		zoomToLayer: false,
 		
-		listOnlyVisibleLayers: false,	//show list of item of layers visible in map canvas
+		listOnlyVisible: false,	//show list of item of layers visible in map canvas
 
 		multiple: false,				//active multiple selection
 		//TODO
 
+		//TODO Leflet to CSS style converter
 		style: {
 			color:'#00f',
 			fillColor:'#08f',
@@ -105,7 +106,7 @@ L.Control.GeoJSONSelector = L.Control.extend({
 				map.scrollWheelZoom.enable();
 			});
 
-		if(this.options.listOnlyVisibleLayers)
+		if(this.options.listOnlyVisible)
 			map.on('moveend', this._updateListVisible, this);
 
 		map.whenReady(function(e) {
@@ -149,7 +150,6 @@ L.Control.GeoJSONSelector = L.Control.extend({
 	},
 
 	_itemBuild: function(layer) {
-
 		return this._getPath(layer.feature, this.options.listLabel) || '&nbsp;';
 	},
 
@@ -165,16 +165,29 @@ L.Control.GeoJSONSelector = L.Control.extend({
 	_selectLayer: function(layer, selected) {
 
 		for(var i = 0; i < this._items.length; i++)
-			if(this._items[i].layer.setStyle)
+			//if(this._items[i].layer.setStyle)
 				this._items[i].layer.setStyle( this.options.style );
 		
 		if(selected && layer.setStyle)
 			layer.setStyle( this.options.selectStyle );
+	},
+
+	_overItem: function(item) {
+		if(!item.selected) {
+			L.DomUtil.addClass(item, this.options.activeClass);
+			item.layer.setStyle( this.options.activeStyle );
+		}
+	},
+	_outItem: function(item) {
+		if(!item.selected) {
+			L.DomUtil.removeClass(item, this.options.activeClass);
+			item.layer.setStyle( this.options.style );
+		}
 	},	
 
 	_createItem: function(layer) {
 
-		var that = this,
+		var self = this,
 			item = L.DomUtil.create('li','geojson-list-item'),
 			label = document.createElement('label'),
 			inputType = this.options.multiple ? 'checkbox' : 'radio',
@@ -190,45 +203,42 @@ L.Control.GeoJSONSelector = L.Control.extend({
 		layer.itemLabel = label;
 
 		L.DomEvent
-			//.disableClickPropagation(item)
 			.on(label, 'click', L.DomEvent.stop, this)
 			.on(label, 'click', function(e) {
 
-				if(that.options.zoomToLayer)
-					that._moveTo( layer );
+				input.checked = !input.checked;
+				
+
+				if(!self.options.multiple) {	//deselect all items
+					for (var i = 0; i < self._items.length; i++)
+						self._items[i].selected = false;
+				}
+
+				item.selected = !item.selected;	
+
+				self._selectItem(item, item.selected);
+				self._selectLayer(item.layer, item.selected);
+
+				if(self.options.zoomToLayer)
+					self._moveTo( layer );
 				//TODO zoom to bbox for multiple layers
 
-				input.checked = !input.checked;
-
-				item.selected = input.checked;
-
-				that._selectItem(item, input.checked);
-				that._selectLayer(layer, input.checked);		
-
-				that.fire('change', {
-					selected: input.checked,					
-					layers: [layer]
-				});
+				self.fire('change', {
+					selected: item.selected,					
+					layers: [item.layer]
+				});		
 
 			}, this);
 
 		L.DomEvent
 			.on(item, 'mouseover', function(e) {
-				
-				L.DomUtil.addClass(e.target, this.options.activeClass);
 
-				for (var i = 0; i < that._items.length; i++)
-					if(!that._items[i])
-						that._items[i].layer.setStyle( that.options.activeStyle );						
+				self._overItem(item);
 
 			}, this)
 			.on(item, 'mouseout', function(e) {
 
-				L.DomUtil.removeClass(e.target, that.options.activeClass);
-
-				for (var i = 0; i < that._items.length; i++)
-					if(!that._items[i])
-						that._items[i].layer.setStyle( that.options.style );						
+				self._outItem(item);
 
 			}, this);
 
@@ -272,21 +282,16 @@ L.Control.GeoJSONSelector = L.Control.extend({
 				layer
 				.on('click', L.DomEvent.stop)
 				.on('click', function(e) {
-					layer.itemLabel.click();
+
+					e.target.itemLabel.click();
 				})
 				.on('mouseover', function(e) {
-	
-					if(layer.setStyle)
-						layer.setStyle( that.options.activeStyle );
 
-					L.DomUtil.addClass(layer.itemList, that.options.activeClass);
+					that._overItem(e.target.itemList);
 				})
 				.on('mouseout', function(e) {
 
-					if(layer.setStyle)
-						layer.setStyle( that.options.style );
-
-					L.DomUtil.removeClass(layer.itemList, that.options.activeClass);
+					that._outItem(e.target.itemList);
 				});
 			}
 		});

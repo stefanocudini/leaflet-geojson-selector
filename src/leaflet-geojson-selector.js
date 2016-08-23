@@ -24,7 +24,7 @@ L.Control.GeoJSONSelector = L.Control.extend({
 		activeListFromLayer: true,		//enable activation of list item from layer
 		zoomToLayer: false,
 		
-		listOnlyVisibleLayers: false,	//show list of item of layers visible in map canvas
+		listOnlyVisible: false,	//show list of item of layers visible in map canvas
 
 		multiple: false,				//active multiple selection
 		//TODO
@@ -90,7 +90,7 @@ L.Control.GeoJSONSelector = L.Control.extend({
 				map.scrollWheelZoom.enable();
 			});
 
-		if(this.options.listOnlyVisibleLayers)
+		if(this.options.listOnlyVisible)
 			map.on('moveend', this._updateListVisible, this);
 
 		map.whenReady(function(e) {

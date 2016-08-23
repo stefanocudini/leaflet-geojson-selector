@@ -33,17 +33,12 @@
 		map.fitBounds( geoLayer.getBounds() )
 			.setMaxBounds( geoLayer.getBounds().pad(0.5) );
 
-		geoList = new L.Control.GeoJSONSelector(geoLayer, {
-			zoomToLayer: true,
-			listOnlyVisibleLayers: true
-		});
-
-		geoList.on('change', function(e) {
-
-			$('#selection').text( JSON.stringify(e.layers[0].feature.properties) );
-		});
-
-		map.addControl(geoList);
+		geoList = new L.Control.GeoJSONSelector(geoLayer)
+			.on('change', function(e) {
+				var props = e.layers[0].feature.properties;
+				L.DomUtil.get('selection').innerHTML = JSON.stringify(props);
+			})
+			.addTo(map);
 		
 	});
 </script>
