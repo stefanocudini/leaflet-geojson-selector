@@ -1,9 +1,11 @@
 # leaflet-geojson-selector
 Show GeoJSON properties in a interactive menu and map
 
-Copyright 2015 [Stefano Cudini](http://labs.easyblog.it/stefano-cudini/)
+Copyright 2016 [Stefano Cudini](http://labs.easyblog.it/stefano-cudini/)
 
 Tested in Leaflet 0.7.3
+
+Licensed under the [MIT](https://opensource.org/licenses/MIT)
 
 ![Image](https://raw.githubusercontent.com/stefanocudini/leaflet-geojson-selector/master/images/leaflet-geojson-selector.jpg)
 
