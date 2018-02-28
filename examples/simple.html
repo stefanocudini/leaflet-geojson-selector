@@ -26,7 +26,7 @@
 
 	map.addControl(L.control.zoom({position:'topright'}));
 
-	$.getJSON('export.json', function(json) {
+	$.getJSON('italy-regions.json', function(json) {
 
 		geoLayer = L.geoJson(json).addTo(map);
 
