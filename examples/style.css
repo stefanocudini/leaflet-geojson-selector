@@ -22,6 +22,22 @@ h3 a,
 h3 a:hover {
 	text-decoration:none;
 }
+
+table {
+	 border-collapse: collapse;
+}
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+th, td {
+    text-align: left;
+    padding: 4px;
+}
+tr:nth-child(even) {background-color: #f2f2f2;}
+
 #desc {
 	float: left;
 	margin-bottom: 1em;
@@ -38,15 +54,13 @@ h3 a:hover {
 	height:400px;
 }
 #selection {
-	width:580px;
 	clear: both;
-	overflow: hidden;
-	margin: 40px 0;
+	width:580px;
 	padding: 10px;
-	background: #eee;
+	background: #fefefe;
 	border: 2px solid #1978cf;
 	border-top: none;
-	box-shadow: 0 0 8px #999;	
+	word-wrap:break-word;
 }
 ul {
 	font-size:.85em;
