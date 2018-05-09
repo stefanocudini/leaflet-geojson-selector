@@ -1,5 +1,5 @@
 /* 
- * Leaflet GeoJSON Selector v0.3.6 - 2018-05-09 
+ * Leaflet GeoJSON Selector v0.4.1 - 2018-05-09 
  * 
  * Copyright 2018 Stefano Cudini 
  * stefano.cudini@gmail.com 
