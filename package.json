@@ -1,6 +1,6 @@
 {
   "name": "leaflet-geojson-selector",
-  "version": "0.3.5",
+  "version": "0.3.6",
   "description": "Leaflet Control for select GeoJSON properties in a interactive menu and map",
   "repository": {
     "type": "git",
@@ -12,6 +12,7 @@
     "email": "stefano.cudini@gmail.com",
     "url": "http://labs.easyblog.it/"
   },
+  "main": "dist/leaflet-geojson-selector.src.js",
   "license": "MIT",
   "keywords": [
     "gis",
