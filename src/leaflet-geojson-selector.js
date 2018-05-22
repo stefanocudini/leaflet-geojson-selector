@@ -21,7 +21,8 @@ L.Control.GeoJSONSelector = L.Control.extend({
 		listSortBy: null,				//GeoJSON property to sort items list, default listLabel
 		listItemBuild: null,			//function list item builder
 		
-		activeListFromLayer: true,		//enable activation of list item from layer
+		activeListFromLayer: true,		//highlight of list item on layer hover
+		//TODO activeLayerFromList: true,	//highlight of layer on list item hover
 		zoomToLayer: false,
 		
 		listOnlyVisibleLayers: false,	//show list of item of layers visible in map canvas
