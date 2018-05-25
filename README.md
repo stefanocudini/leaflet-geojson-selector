@@ -3,7 +3,7 @@ Show GeoJSON properties in a interactive menu and map
 
 Copyright 2016 [Stefano Cudini](http://labs.easyblog.it/stefano-cudini/)
 
-Tested in Leaflet 0.7.3
+Tested in Leaflet 0.7.x, 1.3.x
 
 Licensed under the [MIT](https://opensource.org/licenses/MIT)
 
