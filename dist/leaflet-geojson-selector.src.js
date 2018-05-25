@@ -1,5 +1,5 @@
 /* 
- * Leaflet GeoJSON Selector v0.4.1 - 2018-05-09 
+ * Leaflet GeoJSON Selector v0.4.2 - 2018-05-25 
  * 
  * Copyright 2018 Stefano Cudini 
  * stefano.cudini@gmail.com 
@@ -14,20 +14,34 @@
  * git@github.com:stefanocudini/leaflet-geojson-selector.git 
  * 
  */
+/*
+	Name				Data passed			   Description
 
-(function() {
+	Managed Events:
+	 selector:change	{selected, layers}     fired after checked item in list, selected is true if any layer is selected
+
+	Public methods:
+ 	 reload()			{layer}				   load or reload a geojson layer
+
+*/
+(function (factory) {
+    if(typeof define === 'function' && define.amd) {
+    //AMD
+        define(['leaflet'], factory);
+    } else if(typeof module !== 'undefined') {
+    // Node/CommonJS
+        module.exports = factory(require('leaflet'));
+    } else {
+    // Browser globals
+        if(typeof window.L === 'undefined')
+            throw 'Leaflet must be loaded first';
+        factory(window.L);
+    }
+})(function (L) {
 
 L.Control.GeoJSONSelector = L.Control.extend({
-	//
-	//	Name					Data passed			   Description
-	//
-	//Managed Events:
-	//	change				{layers}               fired after checked item in list
-	//
-	//Public methods:
-	//  TODO...
-	//
-	includes: L.Mixin.Events,
+
+	includes: L.version[0]==='1' ? L.Evented.prototype : L.Mixin.Events,
 
 	options: {
 		collapsed: false,				//collapse panel list
@@ -37,7 +51,8 @@ L.Control.GeoJSONSelector = L.Control.extend({
 		listSortBy: null,				//GeoJSON property to sort items list, default listLabel
 		listItemBuild: null,			//function list item builder
 		
-		activeListFromLayer: true,		//enable activation of list item from layer
+		activeListFromLayer: true,		//highlight of list item on layer hover
+		//TODO activeLayerFromList: true,	//highlight of layer on list item hover
 		zoomToLayer: false,
 		
 		listOnlyVisibleLayers: false,	//show list of item of layers visible in map canvas
@@ -205,8 +220,8 @@ L.Control.GeoJSONSelector = L.Control.extend({
 				that._selectItem(item, input.checked);
 				that._selectLayer(layer, input.checked);		
 
-				that.fire('change', {
-					selected: input.checked,					
+				that.fire('selector:change', {
+					selected: input.checked,
 					layers: [layer]
 				});
 
@@ -387,13 +402,13 @@ L.Control.GeoJSONSelector = L.Control.extend({
 				paddingBottomRight: null
 			};
 
-/*var ne = this._map.containerPointToLatLng( L.point(psize.x, 0) ),
-	sw = this._map.containerPointToLatLng( L.point(msize.x, psize.y) ),
-	bb = L.latLngBounds(sw, ne);
-*/
-/*L.rectangle(bb).addTo(this._map);
-L.marker(bb.getCenter()).addTo(this._map);
-*/
+		/*var ne = this._map.containerPointToLatLng( L.point(psize.x, 0) ),
+			sw = this._map.containerPointToLatLng( L.point(msize.x, psize.y) ),
+			bb = L.latLngBounds(sw, ne);
+		*/
+		/*L.rectangle(bb).addTo(this._map);
+		L.marker(bb.getCenter()).addTo(this._map);
+		*/
 
 		if (pos.indexOf('right') !== -1) {
 			fitOpts.paddingBottomRight = L.point(psize.x, 0);
@@ -415,5 +430,4 @@ L.control.geoJsonSelector = function (layer, options) {
     return new L.Control.GeoJSONSelector(layer, options);
 };
 
-
-}).call(this);
+});
