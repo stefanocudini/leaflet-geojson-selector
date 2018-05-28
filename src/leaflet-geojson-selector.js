@@ -414,4 +414,6 @@ L.control.geoJsonSelector = function (layer, options) {
     return new L.Control.GeoJSONSelector(layer, options);
 };
 
+return L.Control.GeoJSONSelector;
+
 });

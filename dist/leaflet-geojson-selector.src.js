@@ -1,5 +1,5 @@
 /* 
- * Leaflet GeoJSON Selector v0.4.2 - 2018-05-25 
+ * Leaflet GeoJSON Selector v0.4.3 - 2018-05-28 
  * 
  * Copyright 2018 Stefano Cudini 
  * stefano.cudini@gmail.com 
@@ -429,5 +429,7 @@ L.Control.GeoJSONSelector = L.Control.extend({
 L.control.geoJsonSelector = function (layer, options) {
     return new L.Control.GeoJSONSelector(layer, options);
 };
+
+return L.Control.GeoJSONSelector;
 
 });
