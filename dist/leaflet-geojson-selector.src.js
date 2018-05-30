@@ -1,5 +1,5 @@
 /* 
- * Leaflet GeoJSON Selector v0.4.4 - 2018-05-30 
+ * Leaflet GeoJSON Selector v0.4.5 - 2018-05-30 
  * 
  * Copyright 2018 Stefano Cudini 
  * stefano.cudini@gmail.com 
@@ -52,7 +52,7 @@ L.Control.GeoJSONSelector = L.Control.extend({
 		listItemBuild: null,			//function list item builder
 		
 		activeListFromLayer: true,		//highlight of list item on layer hover
-		//TODO activeLayerFromList: true,	//highlight of layer on list item hover
+		activeLayerFromList: true,	//highlight of layer on list item hover
 		zoomToLayer: false,
 		
 		listOnlyVisibleLayers: false,	//show list of item of layers visible in map canvas
@@ -238,6 +238,9 @@ L.Control.GeoJSONSelector = L.Control.extend({
 				for (var i = 0; i < self._items.length; i++)
 					if(!self._items[i])
 						self._items[i].layer.setStyle( self.options.activeStyle );
+				
+				if(self.options.activeLayerFromList)
+					item.layer.fire('mouseover');
 
 			}, this)
 			.on(item, 'mouseout', function(e) {
@@ -246,7 +249,10 @@ L.Control.GeoJSONSelector = L.Control.extend({
 
 				for (var i = 0; i < self._items.length; i++)
 					if(!self._items[i])
-						self._items[i].layer.setStyle( self.options.style );						
+						self._items[i].layer.setStyle( self.options.style );
+
+				if(self.options.activeLayerFromList)
+					item.layer.fire('mouseout');
 
 			}, this);
 
@@ -286,7 +292,7 @@ L.Control.GeoJSONSelector = L.Control.extend({
 			if(layer.setStyle)
 				layer.setStyle( self.options.style );
 
-			if(self.options.activeListFromLayer) {
+			
 				layer
 				.on('click', L.DomEvent.stop)
 				.on('click', function(e) {
@@ -294,13 +300,17 @@ L.Control.GeoJSONSelector = L.Control.extend({
 				})
 				.on('mouseover', function(e) {
 					e.target.setStyle( self.options.activeStyle );
-					//TODO L.DomUtil.addClass(e.target.itemList, self.options.activeClass);
+					
+					if(self.options.activeListFromLayer)
+						L.DomUtil.addClass(e.target.itemList, self.options.activeClass);
 				})
 				.on('mouseout', function(e) {
 					e.target.setStyle(e.target.itemList.selected ? self.options.selectStyle : self.options.style );
-					//TODO L.DomUtil.removeClass(e.target.itemList, self.options.activeClass);
+					
+					if(self.options.activeListFromLayer)
+						L.DomUtil.removeClass(e.target.itemList, self.options.activeClass);
 				});
-			}
+			
 		});
 
 		layers.sort(function(a, b) {

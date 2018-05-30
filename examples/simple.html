@@ -33,6 +33,8 @@ $.getJSON('italy-regions.json', function(json) {
 
 	geoList = new L.Control.GeoJSONSelector(geoLayer, {
 		zoomToLayer: true,
+		activeListFromLayer: true,
+		activeLayerFromList: true,
 		listOnlyVisibleLayers: true
 	});
 
