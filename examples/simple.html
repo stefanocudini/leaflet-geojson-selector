@@ -11,39 +11,35 @@
 <h3><a href="../"><big>◄</big> Leaflet GeoJSON Selector</a></h3>
 <h4>Simple Example: <em>Italian regions</em></h4>
 <div id="map"></div>
-<div id="map2"></div>
-<div id="map3"></div>
 <pre id="selection">&nbsp;</pre>
 <script src="../node_modules/jquery/dist/jquery.min.js"></script>
 <script src="../node_modules/leaflet/dist/leaflet.js"></script>
 <script src="../src/leaflet-geojson-selector.js"></script>
 <script>
-	var geoLayer, geoList,
-		map = new L.Map('map', {
-			layers: L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'),
-			zoomControl: false
-		});
+var geoLayer, geoList,
+	map = new L.Map('map', {
+		layers: L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'),
+		zoomControl: false
+	});
 
-	map.addControl(L.control.zoom({position:'topright'}));
+map.addControl(L.control.zoom({position:'topright'}));
 
-	$.getJSON('italy-regions.json', function(json) {
+$.getJSON('italy-regions.json', function(json) {
 
-		geoLayer = L.geoJson(json).addTo(map);
+	geoLayer = L.geoJson(json).addTo(map);
 
-		map.fitBounds( geoLayer.getBounds() )
-			.setMaxBounds( geoLayer.getBounds().pad(0.5) );
+	map.fitBounds( geoLayer.getBounds() )
+		.setMaxBounds( geoLayer.getBounds().pad(0.5) );
 
-		geoList = new L.Control.GeoJSONSelector(geoLayer, {
-			zoomToLayer: true,
-			listOnlyVisibleLayers: true
-		});
+	geoList = new L.Control.GeoJSONSelector(geoLayer, {
+		zoomToLayer: true,
+		listOnlyVisibleLayers: true
+	});
 
-		geoList.on('change', function(e) {
-
-			$(function(){
+	geoList.on('selector:change', function(e) {
 
 		var jsonObj = $.parseJSON( JSON.stringify(e.layers[0].feature.properties, ['name', 'addr:city', 'addr:postcode', 'addr:street', 'addr:housenumber', 'website', 'email', 'phone', 'fax', 'mail', 'opening_hours','operator']) );
-		var html = '<table border="1">';
+		var html = 'Selection:<br /><table border="1">';
 		$.each(jsonObj, function(key, value){
 				html += '<tr>';
 				html += '<td>' + key.replace(":", " ") + '</td>';
@@ -53,14 +49,11 @@
 		html += '</table>';
 
 		$('#selection').html(html);
-});
-
-
-		});
-
-		map.addControl(geoList);
-
 	});
+	
+	map.addControl(geoList);
+
+});
 </script>
 <div id="copy"><a href="http://labs.easyblog.it/">Labs</a> &bull; <a rel="author" href="http://labs.easyblog.it/stefano-cudini/">Stefano Cudini</a></div>
 	

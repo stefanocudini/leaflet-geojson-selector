@@ -1,5 +1,5 @@
 /* 
- * Leaflet GeoJSON Selector v0.4.3 - 2018-05-28 
+ * Leaflet GeoJSON Selector v0.4.4 - 2018-05-30 
  * 
  * Copyright 2018 Stefano Cudini 
  * stefano.cudini@gmail.com 
@@ -170,11 +170,15 @@ L.Control.GeoJSONSelector = L.Control.extend({
 
 	_selectItem: function(item, selected) {
 
-		for (var i = 0; i < this._items.length; i++)
+		for (var i = 0; i < this._items.length; i++){
+			delete this._items[i].selected;
 			L.DomUtil.removeClass(this._items[i], this.options.selectClass);
+		}
 
-		if(selected)
+		if(selected){
+			item.selected = selected;
 			L.DomUtil.addClass(item, this.options.selectClass );
+		}
 	},
 
 	_selectLayer: function(layer, selected) {
@@ -189,7 +193,7 @@ L.Control.GeoJSONSelector = L.Control.extend({
 
 	_createItem: function(layer) {
 
-		var that = this,
+		var self = this,
 			item = L.DomUtil.create('li','geojson-list-item'),
 			label = document.createElement('label'),
 			inputType = this.options.multiple ? 'checkbox' : 'radio',
@@ -200,6 +204,7 @@ L.Control.GeoJSONSelector = L.Control.extend({
 		label.insertBefore(input, label.firstChild);
 		item.appendChild(label);
 
+		//JOIN list and layers
 		item.layer = layer;
 		layer.itemList = item;
 		layer.itemLabel = label;
@@ -209,18 +214,16 @@ L.Control.GeoJSONSelector = L.Control.extend({
 			.on(label, 'click', L.DomEvent.stop, this)
 			.on(label, 'click', function(e) {
 
-				if(that.options.zoomToLayer)
-					that._moveTo( layer );
+				if(self.options.zoomToLayer)
+					self._moveTo( layer );
 				//TODO zoom to bbox for multiple layers
 
 				input.checked = !input.checked;
 
-				item.selected = input.checked;
+				self._selectItem(item, input.checked);
+				self._selectLayer(layer, input.checked);		
 
-				that._selectItem(item, input.checked);
-				that._selectLayer(layer, input.checked);		
-
-				that.fire('selector:change', {
+				self.fire('selector:change', {
 					selected: input.checked,
 					layers: [layer]
 				});
@@ -232,18 +235,18 @@ L.Control.GeoJSONSelector = L.Control.extend({
 				
 				L.DomUtil.addClass(e.target, this.options.activeClass);
 
-				for (var i = 0; i < that._items.length; i++)
-					if(!that._items[i])
-						that._items[i].layer.setStyle( that.options.activeStyle );						
+				for (var i = 0; i < self._items.length; i++)
+					if(!self._items[i])
+						self._items[i].layer.setStyle( self.options.activeStyle );
 
 			}, this)
 			.on(item, 'mouseout', function(e) {
 
-				L.DomUtil.removeClass(e.target, that.options.activeClass);
+				L.DomUtil.removeClass(e.target, self.options.activeClass);
 
-				for (var i = 0; i < that._items.length; i++)
-					if(!that._items[i])
-						that._items[i].layer.setStyle( that.options.style );						
+				for (var i = 0; i < self._items.length; i++)
+					if(!self._items[i])
+						self._items[i].layer.setStyle( self.options.style );						
 
 			}, this);
 
@@ -268,7 +271,7 @@ L.Control.GeoJSONSelector = L.Control.extend({
 
 	_updateList: function() {
 	
-		var that = this,
+		var self = this,
 			layers = [],
 			sortProp = this.options.listSortBy;
 
@@ -281,34 +284,28 @@ L.Control.GeoJSONSelector = L.Control.extend({
 			layers.push( layer );
 
 			if(layer.setStyle)
-				layer.setStyle( that.options.style );
+				layer.setStyle( self.options.style );
 
-			if(that.options.activeListFromLayer) {
+			if(self.options.activeListFromLayer) {
 				layer
 				.on('click', L.DomEvent.stop)
 				.on('click', function(e) {
-					layer.itemLabel.click();
+					e.target.itemLabel.click();
 				})
 				.on('mouseover', function(e) {
-	
-					if(layer.setStyle)
-						layer.setStyle( that.options.activeStyle );
-
-					L.DomUtil.addClass(layer.itemList, that.options.activeClass);
+					e.target.setStyle( self.options.activeStyle );
+					//TODO L.DomUtil.addClass(e.target.itemList, self.options.activeClass);
 				})
 				.on('mouseout', function(e) {
-
-					if(layer.setStyle)
-						layer.setStyle( that.options.style );
-
-					L.DomUtil.removeClass(layer.itemList, that.options.activeClass);
+					e.target.setStyle(e.target.itemList.selected ? self.options.selectStyle : self.options.style );
+					//TODO L.DomUtil.removeClass(e.target.itemList, self.options.activeClass);
 				});
 			}
 		});
 
 		layers.sort(function(a, b) {
-			var ap = that._getPath(a.feature, sortProp),
-				bp = that._getPath(b.feature, sortProp);
+			var ap = self._getPath(a.feature, sortProp),
+				bp = self._getPath(b.feature, sortProp);
 
 			if(ap < bp)
 				return -1;
@@ -323,15 +320,15 @@ L.Control.GeoJSONSelector = L.Control.extend({
 
 	_updateListVisible: function() {
 
-		var that = this,
+		var self = this,
 			layerbb, visible;
 		
 		this._layer.eachLayer(function(layer) {
 
 			if(layer.getBounds)
-				visible = that._map.getBounds().intersects( layer.getBounds() );
+				visible = self._map.getBounds().intersects( layer.getBounds() );
 			else if(layer.getLatLng)
-				visible = that._map.getBounds().contains( layer.getLatLng() );
+				visible = self._map.getBounds().contains( layer.getLatLng() );
 
 			layer.itemList.style.display = visible ? 'block':'none';
 		});
