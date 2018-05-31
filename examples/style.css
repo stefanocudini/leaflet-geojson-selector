@@ -50,17 +50,17 @@ tr:nth-child(even) {background-color: #f2f2f2;}
 	border:2px solid #1978cf;
 	box-shadow: 0 0 8px #999;
 	float:left;
-	width:800px;
-	height:500px;
+	width:600px;
+	height:400px;
 }
-#selection {
+.selection {
+	min-width: 200px;
+	padding: 4px;
+	border-radius: 4px;
+	box-shadow: 0 1px 5px rgba(0,0,0,0.65);
 	clear: both;
-	width:780px;
-	padding: 10px;
 	background: #fefefe;
-	border: 2px solid #1978cf;
-	border-top: none;
-	word-wrap:break-word;
+	white-space: nowrap;
 }
 ul {
 	font-size:.85em;

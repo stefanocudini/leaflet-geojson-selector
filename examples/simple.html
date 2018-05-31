@@ -11,7 +11,6 @@
 <h3><a href="../"><big>◄</big> Leaflet GeoJSON Selector</a></h3>
 <h4>Simple Example: <em>Italian regions</em></h4>
 <div id="map"></div>
-<pre id="selection">&nbsp;</pre>
 <script src="../node_modules/jquery/dist/jquery.min.js"></script>
 <script src="../node_modules/leaflet/dist/leaflet.js"></script>
 <script src="../src/leaflet-geojson-selector.js"></script>
@@ -19,7 +18,8 @@
 var geoLayer, geoList,
 	map = new L.Map('map', {
 		layers: L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'),
-		zoomControl: false
+		zoomControl: false,
+		attributionControl:false
 	});
 
 map.addControl(L.control.zoom({position:'topright'}));
@@ -32,7 +32,7 @@ $.getJSON('italy-regions.json', function(json) {
 		.setMaxBounds( geoLayer.getBounds().pad(0.5) );
 
 	geoList = new L.Control.GeoJSONSelector(geoLayer, {
-		zoomToLayer: true,
+		//zoomToLayer: true,
 		activeListFromLayer: true,
 		activeLayerFromList: true,
 		listOnlyVisibleLayers: true
@@ -40,7 +40,7 @@ $.getJSON('italy-regions.json', function(json) {
 
 	geoList.on('selector:change', function(e) {
 
-		var jsonObj = $.parseJSON( JSON.stringify(e.layers[0].feature.properties, ['name', 'addr:city', 'addr:postcode', 'addr:street', 'addr:housenumber', 'website', 'email', 'phone', 'fax', 'mail', 'opening_hours','operator']) );
+		var jsonObj = $.parseJSON( JSON.stringify(e.layers[0].feature.properties) );
 		var html = 'Selection:<br /><table border="1">';
 		$.each(jsonObj, function(key, value){
 				html += '<tr>';
@@ -50,10 +50,18 @@ $.getJSON('italy-regions.json', function(json) {
 		});
 		html += '</table>';
 
-		$('#selection').html(html);
+		$('.selection').html(html);
 	});
 	
 	map.addControl(geoList);
+
+	map.addControl(function() {
+		var c = new L.Control({position:'bottomright'});
+		c.onAdd = function(map) {
+				return L.DomUtil.create('pre','selection');
+			};
+		return c;
+	}());
 
 });
 </script>
