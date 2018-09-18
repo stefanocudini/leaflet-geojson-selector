@@ -96,13 +96,9 @@ L.Control.GeoJSONSelector = L.Control.extend({
 
 		this._items = [];
 
-		L.DomEvent
-			.on(container, 'mouseover', function (e) {
-				map.scrollWheelZoom.disable();
-			})
-			.on(container, 'mouseout', function (e) {
-				map.scrollWheelZoom.enable();
-			});
+		L.DomEvent 
+		.disableClickPropagation(container) 
+		.disableScrollPropagation(container);
 
 		if(this.options.listOnlyVisibleLayers)
 			map.on('moveend', this._updateListVisible, this);
