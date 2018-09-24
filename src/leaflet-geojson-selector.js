@@ -114,7 +114,7 @@ L.Control.GeoJSONSelector = L.Control.extend({
 	},
 	
 	onRemove: function(map) {
-		map.off('moveend', this._updateList, this);	
+		map.off('moveend', this._updateListVisible, this);	
 	},
 
 	reload: function(layer) {
@@ -258,10 +258,9 @@ L.Control.GeoJSONSelector = L.Control.extend({
 	_updateList: function() {
 	
 		var self = this,
-			layers = [],
-			sortProp = this.options.listSortBy;
+			layers = [];
 
-		//TODO SORTby
+		if(!this._layer) return;
 
 		//this._list.style.minWidth = '';
 		this._list.innerHTML = '';
@@ -272,47 +271,63 @@ L.Control.GeoJSONSelector = L.Control.extend({
 			if(layer.setStyle)
 				layer.setStyle( self.options.style );
 
-			
-				layer
-				.on('click', L.DomEvent.stop)
-				.on('click', function(e) {
-					e.target.itemLabel.click();
-				})
-				.on('mouseover', function(e) {
-					e.target.setStyle( self.options.activeStyle );
-					
-					if(self.options.activeListFromLayer)
-						L.DomUtil.addClass(e.target.itemList, self.options.activeClass);
-				})
-				.on('mouseout', function(e) {
-					e.target.setStyle(e.target.itemList.selected ? self.options.selectStyle : self.options.style );
-					
-					if(self.options.activeListFromLayer)
-						L.DomUtil.removeClass(e.target.itemList, self.options.activeClass);
-				});
+			layer
+			.on('click', L.DomEvent.stop)
+			.on('click', function(e) {
+				e.target.itemLabel.click();
+			})
+			.on('mouseover', function(e) {
+				e.target.setStyle( self.options.activeStyle );
+				
+				if(self.options.activeListFromLayer)
+					L.DomUtil.addClass(e.target.itemList, self.options.activeClass);
+			})
+			.on('mouseout', function(e) {
+				e.target.setStyle(e.target.itemList.selected ? self.options.selectStyle : self.options.style );
+				
+				if(self.options.activeListFromLayer)
+					L.DomUtil.removeClass(e.target.itemList, self.options.activeClass);
+			});
 			
 		});
 
-		layers.sort(function(a, b) {
-			var ap = self._getPath(a.feature, sortProp),
-				bp = self._getPath(b.feature, sortProp);
+		if(this.options.listSortBy) {
+			layers.sort(function(a, b) {
+				var sortProp = self.options.listSortBy,
+					ap = self._getPath(a.feature, sortProp),
+					bp = self._getPath(b.feature, sortProp);
 
-			if(ap < bp)
-				return -1;
-			if(ap > bp)
-				return 1;
-			return 0;
-		});
+				if(ap < bp)
+					return -1;
+				if(ap > bp)
+					return 1;
+				return 0;
+			});
+		}
 
-		for (var i=0; i<layers.length; i++)
+		for(var i=0; i<layers.length; i++) {
 			this._list.appendChild( this._createItem( layers[i] ) );
+		}
+
+
+		if(this._map.hasLayer(this._layer)) {
+
+			this._layerbb = this._layer.getBounds();
+
+			console.log('_updateList map has layer', this._layer, this._layerbb)
+
+			this._map.setMaxBounds( this._layerbb.pad(0.5) );
+			this._map.fitBounds(this._layerbb);
+		}
 	},
 
 	_updateListVisible: function() {
 
 		var self = this,
 			layerbb, visible;
-		
+	
+		if(!this._layer) return;
+
 		this._layer.eachLayer(function(layer) {
 
 			if(layer.getBounds)
