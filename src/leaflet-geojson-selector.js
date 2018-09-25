@@ -82,46 +82,56 @@ L.Control.GeoJSONSelector = L.Control.extend({
 
 	onAdd: function (map) {
 
-		var container = L.DomUtil.create('div', 'geojson-list');
+		var self = this;
+
+		this._container = L.DomUtil.create('div', 'geojson-list');
 
 		this._baseName = 'geojson-list';
 
 		this._map = map;
 
-		this._container = container;
-
 		this._id = this._baseName + L.stamp(this._container);
 
-		this._list = L.DomUtil.create('ul', 'geojson-list-group', container);
+		this._list = L.DomUtil.create('ul', 'geojson-list-group', this._container);
+
+		if(this._layer)
+			this._map.addLayer(this._layer);
 
 		this._items = [];
 
-		L.DomEvent 
-		.disableClickPropagation(container) 
-		.disableScrollPropagation(container);
+		L.DomEvent
+		.disableClickPropagation(this._container) 
+		.disableScrollPropagation(this._container);
 
 		if(this.options.listOnlyVisibleLayers)
 			map.on('moveend', this._updateListVisible, this);
 
 		map.whenReady(function(e) {
-			container.style.height = (map.getSize().y)+'px';
+			var s = map.getSize();
+			self._container.style.height = (s.y)+'px';
+			self._container.style.maxWidth = (s.x/2)+'px';
 		});
 
 		this._initToggle();
 		this._updateList();
 
-		return container;
+		return this._container;
 	},
 	
 	onRemove: function(map) {
-		map.off('moveend', this._updateListVisible, this);	
+		map.off('moveend', this._updateListVisible, this);
+
+		this._layer.remove();
 	},
 
 	reload: function(layer) {
 
-		//TODO off events
+		if(this._map && this._layer && this._map.hasLayer(this._layer))
+			this._map.removeLayer(this._layer);
 
 		this._layer = layer;
+
+		this._map.addLayer(layer);
 
 		this._updateList();
 
@@ -277,13 +287,15 @@ L.Control.GeoJSONSelector = L.Control.extend({
 				e.target.itemLabel.click();
 			})
 			.on('mouseover', function(e) {
-				e.target.setStyle( self.options.activeStyle );
+				if(e.target.setStyle)
+					e.target.setStyle( self.options.activeStyle );
 				
 				if(self.options.activeListFromLayer)
 					L.DomUtil.addClass(e.target.itemList, self.options.activeClass);
 			})
 			.on('mouseout', function(e) {
-				e.target.setStyle(e.target.itemList.selected ? self.options.selectStyle : self.options.style );
+				if(e.target.setStyle)
+					e.target.setStyle(e.target.itemList.selected ? self.options.selectStyle : self.options.style );
 				
 				if(self.options.activeListFromLayer)
 					L.DomUtil.removeClass(e.target.itemList, self.options.activeClass);
@@ -312,12 +324,15 @@ L.Control.GeoJSONSelector = L.Control.extend({
 
 		if(this._map.hasLayer(this._layer)) {
 
-			this._layerbb = this._layer.getBounds();
-
-			console.log('_updateList map has layer', this._layer, this._layerbb)
-
-			this._map.setMaxBounds( this._layerbb.pad(0.5) );
-			this._map.fitBounds(this._layerbb);
+			if(this._layer.getBounds) {
+				
+				this._layerbb = this._layer.getBounds();
+				
+				if(this._layerbb.isValid()) {
+					this._map.setMaxBounds( this._layerbb.pad(0.5) );
+					this._map.fitBounds( this._layerbb );
+				}
+			}
 		}
 	},
 

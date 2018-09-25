@@ -59,9 +59,7 @@
 
 	map.addControl(L.control.zoom({position:'topright'}));
 
-	var geoLayer = L.geoJson().addTo(map);
-	
-	var geoList = L.control.geoJsonSelector(geoLayer);
+	var geoList = L.control.geoJsonSelector();
 
 	geoList.on('change', function(e) {
 		$('#selection').text(JSON.stringify(e.layers[0].feature.properties));
@@ -72,11 +70,7 @@
 
 		$.getJSON(this.value, function(json) {
 
-			map.removeLayer(geoLayer);
-
-			geoLayer = L.geoJson(json).addTo(map);
-
-			geoList.reload( geoLayer );
+			geoList.reload( L.geoJson(json) );
 		});
 
 	}).trigger('change');
