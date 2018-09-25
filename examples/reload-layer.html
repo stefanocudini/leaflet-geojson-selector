@@ -59,12 +59,13 @@
 
 	map.addControl(L.control.zoom({position:'topright'}));
 
-	var geoList = L.control.geoJsonSelector();
-
+	var geoList = L.control.geoJsonSelector(null, {
+		zoomToLayer: true
+	}).addTo(map);
+	
 	geoList.on('change', function(e) {
 		$('#selection').text(JSON.stringify(e.layers[0].feature.properties));
-	})
-	.addTo(map);
+	});
 	
 	$('#geofile').on('change', function(e) {
 

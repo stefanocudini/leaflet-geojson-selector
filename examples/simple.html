@@ -15,7 +15,8 @@
 <script src="../node_modules/leaflet/dist/leaflet.js"></script>
 <script src="../src/leaflet-geojson-selector.js"></script>
 <script>
-var geoLayer, geoList,
+
+var geoList,
 	map = new L.Map('map', {
 		layers: L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'),
 		zoomControl: false,
@@ -26,9 +27,7 @@ map.addControl(L.control.zoom({position:'topright'}));
 
 $.getJSON('italy-regions.json', function(json) {
 
-	geoLayer = L.geoJson(json).addTo(map);
-
-	geoList = new L.Control.GeoJSONSelector(geoLayer, {
+	geoList = new L.Control.GeoJSONSelector(L.geoJson(json), {
 		zoomToLayer: true,
 		activeListFromLayer: true,
 		activeLayerFromList: true,

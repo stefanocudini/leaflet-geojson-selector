@@ -204,10 +204,11 @@ L.Control.GeoJSONSelector = L.Control.extend({
 			.on(label, 'click', L.DomEvent.stop, this)
 			.on(label, 'click', function(e) {
 
-				if(self.options.zoomToLayer)
-					self._moveTo( layer );
-				//TODO zoom to bbox for multiple layers
+				if(self.options.zoomToLayer) {
+					self._moveTo(layer);
+				}
 
+				//TODO move in _moveTo callback
 				input.checked = !input.checked;
 
 				self._selectItem(item, input.checked);
@@ -321,7 +322,6 @@ L.Control.GeoJSONSelector = L.Control.extend({
 			this._list.appendChild( this._createItem( layers[i] ) );
 		}
 
-
 		if(this._map.hasLayer(this._layer)) {
 
 			if(this._layer.getBounds) {
@@ -329,8 +329,8 @@ L.Control.GeoJSONSelector = L.Control.extend({
 				this._layerbb = this._layer.getBounds();
 				
 				if(this._layerbb.isValid()) {
-					this._map.setMaxBounds( this._layerbb.pad(0.5) );
-					this._map.fitBounds( this._layerbb );
+					this._moveTo(this._layerbb);
+					//this._map.setMaxBounds( this._layerbb.pad(1) );
 				}
 			}
 		}
@@ -406,26 +406,21 @@ L.Control.GeoJSONSelector = L.Control.extend({
 		L.DomUtil.addClass(this._container, 'geojson-list-collapsed');
 	},
 
-    _moveTo: function(layer) {
+    _moveTo: function(dest) {
+
+    	var self = this;
 
     	var pos = this.options.position,
     		w = this._map._controlCorners[ pos ].clientWidth;
 
-		var psize = new L.Point(
+		var psize = L.point(
 				this._container.clientWidth,
-				this._container.clientHeight),
+				this._container.clientHeight
+			),
 			fitOpts = {
 				paddingTopLeft: null,
 				paddingBottomRight: null
 			};
-
-		/*var ne = this._map.containerPointToLatLng( L.point(psize.x, 0) ),
-			sw = this._map.containerPointToLatLng( L.point(msize.x, psize.y) ),
-			bb = L.latLngBounds(sw, ne);
-		*/
-		/*L.rectangle(bb).addTo(this._map);
-		L.marker(bb.getCenter()).addTo(this._map);
-		*/
 
 		if (pos.indexOf('right') !== -1) {
 			fitOpts.paddingBottomRight = L.point(psize.x, 0);
@@ -434,12 +429,15 @@ L.Control.GeoJSONSelector = L.Control.extend({
 			fitOpts.paddingTopLeft = L.point(psize.x, 0);
 		}
 
-    	if(layer.getBounds)
-			this._map.fitBounds(layer.getBounds(), fitOpts);
-
-		else if(layer.getLatLng)
-			this._map.setView( layer.getLatLng() );
-
+ 		if(dest instanceof L.LatLngBounds) {
+			this._map.fitBounds(dest, fitOpts);
+		}
+    	else if(dest.getBounds) {
+			this._map.fitBounds(dest.getBounds(), fitOpts);
+    	}
+		else if(dest.getLatLng) {
+			this._map.setView(dest.getLatLng(), fitOpts);
+		}
     }
 });
 
