@@ -104,36 +104,37 @@ L.Control.GeoJSONSelector = L.Control.extend({
 		.disableScrollPropagation(this._container);
 
 		if(this.options.listOnlyVisibleLayers)
-			map.on('moveend', this._updateListVisible, this);
+			map.on('moveend', this._updateVisible, this);
 
-		map.whenReady(function(e) {
-			var s = map.getSize();
-			self._container.style.height = (s.y)+'px';
-			self._container.style.maxWidth = (s.x/2)+'px';
-		});
+		var s = map.getSize();	
+		self._container.style.height = (s.y)+'px';
+		self._container.style.maxWidth = (s.x/2)+'px';
 
-		this._initToggle();
-		this._updateList();
-
+		self._update();
+		
 		return this._container;
 	},
 	
 	onRemove: function(map) {
-		map.off('moveend', this._updateListVisible, this);
+
+		map.off('moveend', this._updateVisible, this);
 
 		this._layer.remove();
 	},
 
 	reload: function(layer) {
 
-		if(this._map && this._layer && this._map.hasLayer(this._layer))
-			this._map.removeLayer(this._layer);
+		if(this._map) {
 
-		this._layer = layer;
+			if(this._layer)
+				this._map.removeLayer(this._layer);
 
-		this._map.addLayer(layer);
+			this._map.addLayer(layer);
+		
+			this._layer = layer;
 
-		this._updateList();
+			this._update();
+		}
 
 		return this;
 	},
@@ -266,7 +267,7 @@ L.Control.GeoJSONSelector = L.Control.extend({
 		return radioFragment.firstChild;
 	},
 
-	_updateList: function() {
+	_update: function() {
 	
 		var self = this,
 			layers = [];
@@ -319,24 +320,28 @@ L.Control.GeoJSONSelector = L.Control.extend({
 		}
 
 		for(var i=0; i<layers.length; i++) {
-			this._list.appendChild( this._createItem( layers[i] ) );
+			self._list.appendChild( self._createItem( layers[i] ) );
 		}
 
-		if(this._map.hasLayer(this._layer)) {
+		this._map.addLayer(this._layer);
 
-			if(this._layer.getBounds) {
+		if(this._layer.getBounds) {
+			
+			this._layerbb = this._layer.getBounds();
+			
+			if(this._layerbb.isValid()) {
+
+				setTimeout(function() {
+
+					self._moveTo(self._layerbb);
+					//TODO self._map.setMaxBounds( self._layerbb.pad(1.5) );
 				
-				this._layerbb = this._layer.getBounds();
-				
-				if(this._layerbb.isValid()) {
-					this._moveTo(this._layerbb);
-					//this._map.setMaxBounds( this._layerbb.pad(1) );
-				}
+				},50);
 			}
 		}
 	},
 
-	_updateListVisible: function() {
+	_updateVisible: function() {
 
 		var self = this,
 			layerbb, visible;
@@ -354,66 +359,12 @@ L.Control.GeoJSONSelector = L.Control.extend({
 		});
 	},
 
-	_initToggle: function () {
-
-		/* inspired by L.Control.Layers */
-
-		var container = this._container;
-
-		//Makes this work on IE10 Touch devices by stopping it from firing a mouseout event when the touch is released
-		container.setAttribute('aria-haspopup', true);
-
-		if (!L.Browser.touch) {
-			L.DomEvent
-				.disableClickPropagation(container);
-				//.disableScrollPropagation(container);
-		} else {
-			L.DomEvent.on(container, 'click', L.DomEvent.stopPropagation);
-		}
-
-		if (this.options.collapsed)
-		{
-			this._collapse();
-
-			if (!L.Browser.android) {
-				L.DomEvent
-					.on(container, 'mouseover', this._expand, this)
-					.on(container, 'mouseout', this._collapse, this);
-			}
-			var link = this._button = L.DomUtil.create('a', 'geojson-list-toggle', container);
-			link.href = '#';
-			link.title = 'List GeoJSON';
-
-			if (L.Browser.touch) {
-				L.DomEvent
-					.on(link, 'click', L.DomEvent.stop)
-					.on(link, 'click', this._expand, this);
-			}
-			else {
-				L.DomEvent.on(link, 'focus', this._expand, this);
-			}
-
-			this._map.on('click', this._collapse, this);
-			// TODO keyboard accessibility
-		}
-	},
-
-	_expand: function () {
-		this._container.className = this._container.className.replace(' geojson-list-collapsed', '');
-	},
-
-	_collapse: function () {
-		L.DomUtil.addClass(this._container, 'geojson-list-collapsed');
-	},
-
     _moveTo: function(dest) {
 
     	var self = this;
 
     	var pos = this.options.position,
-    		w = this._map._controlCorners[ pos ].clientWidth;
-
-		var psize = L.point(
+    		psize = L.point(
 				this._container.clientWidth,
 				this._container.clientHeight
 			),
@@ -438,7 +389,15 @@ L.Control.GeoJSONSelector = L.Control.extend({
 		else if(dest.getLatLng) {
 			this._map.setView(dest.getLatLng(), fitOpts);
 		}
-    }
+    },
+
+	_expand: function () {
+		this._container.className = this._container.className.replace(' geojson-list-collapsed', '');
+	},
+
+	_collapse: function () {
+		L.DomUtil.addClass(this._container, 'geojson-list-collapsed');
+	}
 });
 
 L.control.geoJsonSelector = function (layer, options) {

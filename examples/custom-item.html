@@ -34,23 +34,36 @@
 
 		var geoLayer = L.geoJson(json).addTo(map);
 		
-		map
-		.fitBounds( geoLayer.getBounds() )
-		.setMaxBounds( geoLayer.getBounds().pad(0.5) );
-
 		var geoList = new L.Control.GeoJSONSelector(geoLayer, {
-			position: 'bottomright',
 			zoomToLayer: true,
 			listItemBuild: function(layer) {
 				return L.Util.template('<small><b>{name}</b><br>Length: {length} <br>Area: {area} </small>', layer.feature.properties);
 			}
-		});
+		}).addTo(map);
 
-		geoList.on('change', function(e) {
-			$('#selection').text(JSON.stringify(e.layers[0].feature.properties));
-		});
+		geoList.on('selector:change', function(e) {
 
-		map.addControl(geoList);
+			var jsonObj = $.parseJSON( JSON.stringify(e.layers[0].feature.properties) );
+			var html = 'Selection:<br /><table border="1">';
+			$.each(jsonObj, function(key, value){
+					html += '<tr>';
+					html += '<td>' + key.replace(":", " ") + '</td>';
+					html += '<td>' + value + '</td>';
+					html += '</tr>';
+			});
+			html += '</table>';
+
+			$('.selection').html(html);
+		});
+		
+
+		map.addControl(function() {
+			var c = new L.Control({position:'bottomright'});
+			c.onAdd = function(map) {
+					return L.DomUtil.create('pre','selection');
+				};
+			return c;
+		}());
 		
 	});
 

@@ -16,8 +16,7 @@
 <script src="../src/leaflet-geojson-selector.js"></script>
 <script>
 
-var geoList,
-	map = new L.Map('map', {
+var map = new L.Map('map', {
 		layers: L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'),
 		zoomControl: false,
 		attributionControl:false
@@ -27,12 +26,12 @@ map.addControl(L.control.zoom({position:'topright'}));
 
 $.getJSON('italy-regions.json', function(json) {
 
-	geoList = new L.Control.GeoJSONSelector(L.geoJson(json), {
+	var geoList = new L.Control.GeoJSONSelector(L.geoJson(json), {
 		zoomToLayer: true,
 		activeListFromLayer: true,
 		activeLayerFromList: true,
 		listOnlyVisibleLayers: true
-	});
+	}).addTo(map);
 
 	geoList.on('selector:change', function(e) {
 
@@ -49,8 +48,6 @@ $.getJSON('italy-regions.json', function(json) {
 		$('.selection').html(html);
 	});
 	
-	map.addControl(geoList);
-
 	map.addControl(function() {
 		var c = new L.Control({position:'bottomright'});
 		c.onAdd = function(map) {

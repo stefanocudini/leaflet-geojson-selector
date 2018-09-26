@@ -63,12 +63,8 @@
 
 		geoLayer = L.geoJson(json).addTo(map);
 		
-		map
-		.fitBounds( geoLayer.getBounds() )
-		.setMaxBounds( geoLayer.getBounds().pad(0.5) );
-
 		geoList = new L.Control.GeoJSONSelector( geoLayer );
-		geoList.on('change', function(e) {
+		geoList.on('selector:change', function(e) {
 			$('#selection').text( JSON.stringify(e.layers[0].feature.properties) );
 		});
 		map.addControl(geoList);

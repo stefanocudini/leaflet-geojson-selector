@@ -1,5 +1,5 @@
 /* 
- * Leaflet GeoJSON Selector v0.5.0 - 2018-09-25 
+ * Leaflet GeoJSON Selector v0.5.2 - 2018-09-26 
  * 
  * Copyright 2018 Stefano Cudini 
  * stefano.cudini@gmail.com 
@@ -120,36 +120,37 @@ L.Control.GeoJSONSelector = L.Control.extend({
 		.disableScrollPropagation(this._container);
 
 		if(this.options.listOnlyVisibleLayers)
-			map.on('moveend', this._updateListVisible, this);
+			map.on('moveend', this._updateVisible, this);
 
-		map.whenReady(function(e) {
-			var s = map.getSize();
-			self._container.style.height = (s.y)+'px';
-			self._container.style.maxWidth = (s.x/2)+'px';
-		});
+		var s = map.getSize();	
+		self._container.style.height = (s.y)+'px';
+		self._container.style.maxWidth = (s.x/2)+'px';
 
-		this._initToggle();
-		this._updateList();
-
+		self._update();
+		
 		return this._container;
 	},
 	
 	onRemove: function(map) {
-		map.off('moveend', this._updateListVisible, this);
+
+		map.off('moveend', this._updateVisible, this);
 
 		this._layer.remove();
 	},
 
 	reload: function(layer) {
 
-		if(this._map && this._layer && this._map.hasLayer(this._layer))
-			this._map.removeLayer(this._layer);
+		if(this._map) {
 
-		this._layer = layer;
+			if(this._layer)
+				this._map.removeLayer(this._layer);
 
-		this._map.addLayer(layer);
+			this._map.addLayer(layer);
+		
+			this._layer = layer;
 
-		this._updateList();
+			this._update();
+		}
 
 		return this;
 	},
@@ -220,10 +221,11 @@ L.Control.GeoJSONSelector = L.Control.extend({
 			.on(label, 'click', L.DomEvent.stop, this)
 			.on(label, 'click', function(e) {
 
-				if(self.options.zoomToLayer)
-					self._moveTo( layer );
-				//TODO zoom to bbox for multiple layers
+				if(self.options.zoomToLayer) {
+					self._moveTo(layer);
+				}
 
+				//TODO move in _moveTo callback
 				input.checked = !input.checked;
 
 				self._selectItem(item, input.checked);
@@ -281,7 +283,7 @@ L.Control.GeoJSONSelector = L.Control.extend({
 		return radioFragment.firstChild;
 	},
 
-	_updateList: function() {
+	_update: function() {
 	
 		var self = this,
 			layers = [];
@@ -334,25 +336,28 @@ L.Control.GeoJSONSelector = L.Control.extend({
 		}
 
 		for(var i=0; i<layers.length; i++) {
-			this._list.appendChild( this._createItem( layers[i] ) );
+			self._list.appendChild( self._createItem( layers[i] ) );
 		}
 
+		this._map.addLayer(this._layer);
 
-		if(this._map.hasLayer(this._layer)) {
+		if(this._layer.getBounds) {
+			
+			this._layerbb = this._layer.getBounds();
+			
+			if(this._layerbb.isValid()) {
 
-			if(this._layer.getBounds) {
+				setTimeout(function() {
+
+					self._moveTo(self._layerbb);
+					//TODO self._map.setMaxBounds( self._layerbb.pad(1.5) );
 				
-				this._layerbb = this._layer.getBounds();
-				
-				if(this._layerbb.isValid()) {
-					this._map.setMaxBounds( this._layerbb.pad(0.5) );
-					this._map.fitBounds( this._layerbb );
-				}
+				},50);
 			}
 		}
 	},
 
-	_updateListVisible: function() {
+	_updateVisible: function() {
 
 		var self = this,
 			layerbb, visible;
@@ -370,78 +375,19 @@ L.Control.GeoJSONSelector = L.Control.extend({
 		});
 	},
 
-	_initToggle: function () {
+    _moveTo: function(dest) {
 
-		/* inspired by L.Control.Layers */
-
-		var container = this._container;
-
-		//Makes this work on IE10 Touch devices by stopping it from firing a mouseout event when the touch is released
-		container.setAttribute('aria-haspopup', true);
-
-		if (!L.Browser.touch) {
-			L.DomEvent
-				.disableClickPropagation(container);
-				//.disableScrollPropagation(container);
-		} else {
-			L.DomEvent.on(container, 'click', L.DomEvent.stopPropagation);
-		}
-
-		if (this.options.collapsed)
-		{
-			this._collapse();
-
-			if (!L.Browser.android) {
-				L.DomEvent
-					.on(container, 'mouseover', this._expand, this)
-					.on(container, 'mouseout', this._collapse, this);
-			}
-			var link = this._button = L.DomUtil.create('a', 'geojson-list-toggle', container);
-			link.href = '#';
-			link.title = 'List GeoJSON';
-
-			if (L.Browser.touch) {
-				L.DomEvent
-					.on(link, 'click', L.DomEvent.stop)
-					.on(link, 'click', this._expand, this);
-			}
-			else {
-				L.DomEvent.on(link, 'focus', this._expand, this);
-			}
-
-			this._map.on('click', this._collapse, this);
-			// TODO keyboard accessibility
-		}
-	},
-
-	_expand: function () {
-		this._container.className = this._container.className.replace(' geojson-list-collapsed', '');
-	},
-
-	_collapse: function () {
-		L.DomUtil.addClass(this._container, 'geojson-list-collapsed');
-	},
-
-    _moveTo: function(layer) {
+    	var self = this;
 
     	var pos = this.options.position,
-    		w = this._map._controlCorners[ pos ].clientWidth;
-
-		var psize = new L.Point(
+    		psize = L.point(
 				this._container.clientWidth,
-				this._container.clientHeight),
+				this._container.clientHeight
+			),
 			fitOpts = {
 				paddingTopLeft: null,
 				paddingBottomRight: null
 			};
-
-		/*var ne = this._map.containerPointToLatLng( L.point(psize.x, 0) ),
-			sw = this._map.containerPointToLatLng( L.point(msize.x, psize.y) ),
-			bb = L.latLngBounds(sw, ne);
-		*/
-		/*L.rectangle(bb).addTo(this._map);
-		L.marker(bb.getCenter()).addTo(this._map);
-		*/
 
 		if (pos.indexOf('right') !== -1) {
 			fitOpts.paddingBottomRight = L.point(psize.x, 0);
@@ -450,13 +396,24 @@ L.Control.GeoJSONSelector = L.Control.extend({
 			fitOpts.paddingTopLeft = L.point(psize.x, 0);
 		}
 
-    	if(layer.getBounds)
-			this._map.fitBounds(layer.getBounds(), fitOpts);
+ 		if(dest instanceof L.LatLngBounds) {
+			this._map.fitBounds(dest, fitOpts);
+		}
+    	else if(dest.getBounds) {
+			this._map.fitBounds(dest.getBounds(), fitOpts);
+    	}
+		else if(dest.getLatLng) {
+			this._map.setView(dest.getLatLng(), fitOpts);
+		}
+    },
 
-		else if(layer.getLatLng)
-			this._map.setView( layer.getLatLng() );
+	_expand: function () {
+		this._container.className = this._container.className.replace(' geojson-list-collapsed', '');
+	},
 
-    }
+	_collapse: function () {
+		L.DomUtil.addClass(this._container, 'geojson-list-collapsed');
+	}
 });
 
 L.control.geoJsonSelector = function (layer, options) {
