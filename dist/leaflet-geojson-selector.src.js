@@ -1,5 +1,5 @@
 /* 
- * Leaflet GeoJSON Selector v0.5.2 - 2018-09-26 
+ * Leaflet GeoJSON Selector v0.5.4 - 2018-09-28 
  * 
  * Copyright 2018 Stefano Cudini 
  * stefano.cudini@gmail.com 
@@ -44,7 +44,6 @@ L.Control.GeoJSONSelector = L.Control.extend({
 	includes: L.version[0]==='1' ? L.Evented.prototype : L.Mixin.Events,
 
 	options: {
-		collapsed: false,				//collapse panel list
 		position: 'bottomleft',			//position of panel list
 		
 		listLabel: 'properties.name',	//GeoJSON property to generate items list
@@ -52,7 +51,7 @@ L.Control.GeoJSONSelector = L.Control.extend({
 		listItemBuild: null,			//function list item builder
 		
 		activeListFromLayer: true,		//highlight of list item on layer hover
-		activeLayerFromList: true,	//highlight of layer on list item hover
+		activeLayerFromList: true,		//highlight of layer on list item hover
 		zoomToLayer: false,
 		
 		listOnlyVisibleLayers: false,	//show list of item of layers visible in map canvas
@@ -342,40 +341,36 @@ L.Control.GeoJSONSelector = L.Control.extend({
 		this._map.addLayer(this._layer);
 
 		if(this._layer.getBounds) {
-			
-			this._layerbb = this._layer.getBounds();
-			
-			if(this._layerbb.isValid()) {
+		
+			setTimeout(function() {
 
-				setTimeout(function() {
+				self._moveTo(self._layer);
 
-					self._moveTo(self._layerbb);
-					//TODO self._map.setMaxBounds( self._layerbb.pad(1.5) );
-				
-				},50);
-			}
+			}, 50);
 		}
 	},
 
 	_updateVisible: function() {
 
 		var self = this,
-			layerbb, visible;
+			bb = self._map.getBounds(),
+			visible;
 	
 		if(!this._layer) return;
 
 		this._layer.eachLayer(function(layer) {
 
 			if(layer.getBounds)
-				visible = self._map.getBounds().intersects( layer.getBounds() );
+				visible = bb.intersects( layer.getBounds() );
 			else if(layer.getLatLng)
-				visible = self._map.getBounds().contains( layer.getLatLng() );
+				visible = bb.contains( layer.getLatLng() );
 
-			layer.itemList.style.display = visible ? 'block':'none';
+			if(layer.itemList)
+				layer.itemList.style.display = visible ? 'block':'none';
 		});
 	},
 
-    _moveTo: function(dest) {
+    _moveTo: function(layer) {
 
     	var self = this;
 
@@ -396,24 +391,17 @@ L.Control.GeoJSONSelector = L.Control.extend({
 			fitOpts.paddingTopLeft = L.point(psize.x, 0);
 		}
 
- 		if(dest instanceof L.LatLngBounds) {
-			this._map.fitBounds(dest, fitOpts);
+ 		if(layer.getBounds) {
+ 			var bb = layer.getBounds();
+ 			if(bb.isValid()) {
+				self._map.fitBounds(bb, fitOpts);
+				//self._map.setMaxBounds(bb.pad(2))
+ 			}
 		}
-    	else if(dest.getBounds) {
-			this._map.fitBounds(dest.getBounds(), fitOpts);
-    	}
-		else if(dest.getLatLng) {
-			this._map.setView(dest.getLatLng(), fitOpts);
+		else if(layer.getLatLng) {
+			self._map.setView(layer.getLatLng(), fitOpts);
 		}
-    },
-
-	_expand: function () {
-		this._container.className = this._container.className.replace(' geojson-list-collapsed', '');
-	},
-
-	_collapse: function () {
-		L.DomUtil.addClass(this._container, 'geojson-list-collapsed');
-	}
+    }
 });
 
 L.control.geoJsonSelector = function (layer, options) {

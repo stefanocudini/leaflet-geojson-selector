@@ -1,5 +1,5 @@
 /* 
- * Leaflet GeoJSON Selector v0.5.2 - 2018-09-26 
+ * Leaflet GeoJSON Selector v0.5.4 - 2018-09-28 
  * 
  * Copyright 2018 Stefano Cudini 
  * stefano.cudini@gmail.com 
@@ -81,8 +81,3 @@
 .leaflet-control.geojson-list .geojson-list-group {
 	display: block;
 }
-.leaflet-control.geojson-list.geojson-list-collapsed .geojson-list-ul {
-	display: none;
-}
-
-

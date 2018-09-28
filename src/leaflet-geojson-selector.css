@@ -65,8 +65,3 @@
 .leaflet-control.geojson-list .geojson-list-group {
 	display: block;
 }
-.leaflet-control.geojson-list.geojson-list-collapsed .geojson-list-ul {
-	display: none;
-}
-
-
