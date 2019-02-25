@@ -1,4 +1,7 @@
 # leaflet-geojson-selector
+
+[![npm version](https://badge.fury.io/js/leaflet-geojson-selector.svg)](http://badge.fury.io/js/leaflet-geojson-selector)
+
 Show GeoJSON properties in a interactive menu and map
 
 Copyright 2016 [Stefano Cudini](http://labs.easyblog.it/stefano-cudini/)
