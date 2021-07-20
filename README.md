@@ -1,7 +1,7 @@
 # leaflet-geojson-selector
 Show GeoJSON properties in a interactive menu and map
 
-Copyright 2016 [Stefano Cudini](http://labs.easyblog.it/stefano-cudini/)
+Copyright 2016 [Stefano Cudini](https://opengeo.tech/stefano-cudini/)
 
 Tested in Leaflet 0.7.x, 1.3.x
 
@@ -12,7 +12,7 @@ Licensed under the [MIT](https://opensource.org/licenses/MIT)
 #Where
 
 **Demo online:**  
-[labs.easyblog.it/maps/leaflet-geojson-selector](http://labs.easyblog.it/maps/leaflet-geojson-selector/)
+[opengeo.tech/maps/leaflet-geojson-selector](https://opengeo.tech/maps/leaflet-geojson-selector/)
 
 **Source code:**  
 [Github](https://github.com/stefanocudini/leaflet-geojson-selector)  
@@ -50,7 +50,7 @@ Licensed under the [MIT](https://opensource.org/licenses/MIT)
 
 #Build
 
-Since Version 1.4.7 this plugin support [Grunt](http://gruntjs.com/) for building process.
+Since Version 1.4.7 this plugin support [Grunt](https://gruntjs.com/) for building process.
 Therefore the deployment require [NPM](https://npmjs.org/) installed in your system.
 After you've made sure to have npm working, run this in command line:
 ```bash

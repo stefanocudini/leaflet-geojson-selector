@@ -3,12 +3,12 @@
  * 
  * Copyright 2018 Stefano Cudini 
  * stefano.cudini@gmail.com 
- * http://labs.easyblog.it/ 
+ * https://opengeo.tech/ 
  * 
  * Licensed under the MIT license. 
  * 
  * Demo: 
- * http://labs.easyblog.it/maps/leaflet-geojson-selector/ 
+ * https://opengeo.tech/maps/leaflet-geojson-selector/ 
  * 
  * Source: 
  * git@github.com:stefanocudini/leaflet-geojson-selector.git 

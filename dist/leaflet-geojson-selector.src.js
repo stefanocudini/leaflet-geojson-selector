@@ -3,12 +3,12 @@
  * 
  * Copyright 2018 Stefano Cudini 
  * stefano.cudini@gmail.com 
- * http://labs.easyblog.it/ 
+ * https://opengeo.tech/ 
  * 
  * Licensed under the MIT license. 
  * 
  * Demo: 
- * http://labs.easyblog.it/maps/leaflet-geojson-selector/ 
+ * https://opengeo.tech/maps/leaflet-geojson-selector/ 
  * 
  * Source: 
  * git@github.com:stefanocudini/leaflet-geojson-selector.git 
@@ -269,7 +269,7 @@ L.Control.GeoJSONSelector = L.Control.extend({
 		return item;
 	},
 
-	// IE7 bugs out if you create a radio dynamically, so you have to do it this hacky way (see http://bit.ly/PqYLBe)
+	// IE7 bugs out if you create a radio dynamically, so you have to do it this hacky way (see https://bit.ly/PqYLBe)
 	_createInputElement: function (type, name, checked) {
 
 		var radioHtml = '<input type="'+type+'" name="' + name + '"';

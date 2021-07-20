@@ -6,11 +6,11 @@
     "type": "git",
     "url": "git@github.com:stefanocudini/leaflet-geojson-selector.git"
   },
-  "homepage": "http://labs.easyblog.it/maps/leaflet-geojson-selector/",
+  "homepage": "https://opengeo.tech/maps/leaflet-geojson-selector/",
   "author": {
     "name": "Stefano Cudini",
     "email": "stefano.cudini@gmail.com",
-    "url": "http://labs.easyblog.it/"
+    "url": "https://opengeo.tech/"
   },
   "main": "dist/leaflet-geojson-selector.src.js",
   "license": "MIT",

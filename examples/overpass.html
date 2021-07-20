@@ -1,5 +1,5 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"> 
-<html xmlns="http://www.w3.org/1999/xhtml"> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"> 
+<html xmlns="https://www.w3.org/1999/xhtml"> 
 <head> 
 <title></title> 
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /> 
@@ -56,7 +56,7 @@
 			center: L.latLng(41.89059, 12.51652),
 			zoom: 18,
 			zoomControl: false,
-			layers: L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png')
+			layers: L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png')
 		});
 
 	map.addControl(L.control.zoom({position:'topright'}));
@@ -105,7 +105,7 @@
 			data: this.value,
 			type: 'post',
 			dataType: 'json',
-			url: 'http://overpass-api.de/api/interpreter',
+			url: 'https://overpass-api.de/api/interpreter',
 			success: function(json) {
 
 				map.removeLayer(geoLayer);
@@ -123,7 +123,7 @@
 
 </script>
 
-<div id="copy"><a href="http://labs.easyblog.it/">Labs</a> &bull; <a rel="author" href="http://labs.easyblog.it/stefano-cudini/">Stefano Cudini</a></div>
+<div id="copy"><a href="https://opengeo.tech/">Labs</a> &bull; <a rel="author" href="https://opengeo.tech/stefano-cudini/">Stefano Cudini</a></div>
 	
 </body>
 </html>
