@@ -79,6 +79,9 @@ L.Control.GeoJSONSelector = L.Control.extend({
 		this._id = this._baseName + L.stamp(this._container);
 
 		this._list = L.DomUtil.create('ul', 'geojson-list-group', container);
+		L.DomEvent
+			.disableClickPropagation(this._list)
+			.on(this._list, 'keyup', this._handleKeypress, this)
 
 		this._items = [];
 
@@ -396,8 +399,57 @@ L.marker(bb.getCenter()).addTo(this._map);
 
 		else if(layer.getLatLng)
 			this._map.setView( layer.getLatLng() );
+    },
+_handleKeypress: function (e) {	//run _input keyup event
+		var self = this;
 
-    }
+		switch(e.keyCode)
+		{
+			case 27://Esc
+				this.collapse();
+			break;
+			case 13://Enter
+				if(this._countertips == 1 || (this.options.firstTipSubmit && this._countertips > 0)) {
+          			if(this._tooltip.currentSelection == -1) {
+						this._handleArrowSelect(1);
+          			}
+				}
+				this._handleSubmit();	//do search
+			break;
+			case 38://Up
+				this._handleArrowSelect(-1);
+			break;
+			case 40://Down
+				this._handleArrowSelect(1);
+			break;
+			case 37://Left
+			case 39://Right
+			case 16://Shift
+			case 17://Ctrl
+			case 35://End
+			case 36://Home
+			break;
+			default://All keys
+				if(this._input.value.length)
+					this._cancel.style.display = 'block';
+				else
+					this._cancel.style.display = 'none';
+
+				if(this._input.value.length >= this.options.minLength)
+				{
+					clearTimeout(this.timerKeypress);	//cancel last search request while type in
+					this.timerKeypress = setTimeout(function() {	//delay before request, for limit jsonp/ajax request
+
+						self._fillRecordsCache();
+
+					}, this.options.delayType);
+				}
+				else
+					this._hideTooltip();
+		}
+
+		this._handleAutoresize();
+	},
 });
 
 L.control.geoJsonSelector = function (layer, options) {
