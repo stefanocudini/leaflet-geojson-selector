@@ -80,8 +80,9 @@ L.Control.GeoJSONSelector = L.Control.extend({
 
 		this._list = L.DomUtil.create('ul', 'geojson-list-group', container);
 		L.DomEvent
-			.disableClickPropagation(this._list)
+			//.disableClickPropagation(this._list)
 			.on(this._list, 'keyup', this._handleKeypress, this)
+			//.on(input, 'focus', this.collapseDelayedStop, this);
 
 		this._list.currentSelection = 0;
 
@@ -404,7 +405,7 @@ L.marker(bb.getCenter()).addTo(this._map);
     },
 	_handleKeypress: function (e) {	//run _input keyup event
 		var self = this;
-
+console.log(e)
 		switch(e.keyCode)
 		{
 			case 27://Esc
@@ -427,8 +428,6 @@ L.marker(bb.getCenter()).addTo(this._map);
 			case 36://Home
 			break;
 		}
-
-		this._handleAutoresize();
 	},
 	_handleArrowSelect: function(velocity) {
 
