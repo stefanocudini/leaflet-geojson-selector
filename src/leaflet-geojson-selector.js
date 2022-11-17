@@ -83,6 +83,8 @@ L.Control.GeoJSONSelector = L.Control.extend({
 			.disableClickPropagation(this._list)
 			.on(this._list, 'keyup', this._handleKeypress, this)
 
+		this._list.currentSelection = 0;
+
 		this._items = [];
 
 		L.DomEvent
@@ -400,7 +402,7 @@ L.marker(bb.getCenter()).addTo(this._map);
 		else if(layer.getLatLng)
 			this._map.setView( layer.getLatLng() );
     },
-_handleKeypress: function (e) {	//run _input keyup event
+	_handleKeypress: function (e) {	//run _input keyup event
 		var self = this;
 
 		switch(e.keyCode)
@@ -409,11 +411,6 @@ _handleKeypress: function (e) {	//run _input keyup event
 				this.collapse();
 			break;
 			case 13://Enter
-				if(this._countertips == 1 || (this.options.firstTipSubmit && this._countertips > 0)) {
-          			if(this._tooltip.currentSelection == -1) {
-						this._handleArrowSelect(1);
-          			}
-				}
 				this._handleSubmit();	//do search
 			break;
 			case 38://Up
@@ -429,27 +426,25 @@ _handleKeypress: function (e) {	//run _input keyup event
 			case 35://End
 			case 36://Home
 			break;
-			default://All keys
-				if(this._input.value.length)
-					this._cancel.style.display = 'block';
-				else
-					this._cancel.style.display = 'none';
-
-				if(this._input.value.length >= this.options.minLength)
-				{
-					clearTimeout(this.timerKeypress);	//cancel last search request while type in
-					this.timerKeypress = setTimeout(function() {	//delay before request, for limit jsonp/ajax request
-
-						self._fillRecordsCache();
-
-					}, this.options.delayType);
-				}
-				else
-					this._hideTooltip();
 		}
 
 		this._handleAutoresize();
 	},
+	_handleArrowSelect: function(velocity) {
+
+		var lis = this._list.hasChildNodes() ? this._list.childNodes : [];
+
+		for (let i=0; i<lis.length; i++) {
+			L.DomUtil.removeClass(lis[i], 'selected');
+		}
+
+		if ((velocity == 1 ) && (this._list.currentSelection >= (lis.length - 1))) {// If at end of list.
+			L.DomUtil.addClass(lis[this._list.currentSelection], 'selected');
+		}
+		else if ((velocity == -1 ) && (this._list.currentSelection <= 0)) { // Going back up to the search box.
+			this._list.currentSelection = -1;
+		}
+	}
 });
 
 L.control.geoJsonSelector = function (layer, options) {
