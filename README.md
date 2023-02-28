@@ -6,6 +6,8 @@ Show GeoJSON properties in a interactive menu and map
 
 Copyright 2016 [Stefano Cudini](https://opengeo.tech/stefano-cudini/)
 
+If this project helped your work help me to keep this alive by [Paypal **DONATION &#10084;**](https://www.paypal.me/stefanocudini)
+
 Tested in Leaflet 0.7.x, 1.3.x
 
 Licensed under the [MIT](https://opensource.org/licenses/MIT)
